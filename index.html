@@ -2920,9 +2920,6 @@
   const BOOK_API = {
     googleBooks: 'https://www.googleapis.com/books/v1/volumes',
     openLibrary: 'https://openlibrary.org/search.json',
-    // Clé optionnelle : augmente le quota Google Books (sans elle, l'API fonctionne
-    // déjà mais avec un quota anonyme plus vite atteint en cas d'usage intensif).
-    googleBooksApiKey: 'AIzaSyCNCE8ykNGkPvSKm7KiCY9ZpICcjPXduLM',
     timeoutMs: 7000,
   };
   const searchCache = new Map();
@@ -3502,10 +3499,10 @@
     await handleScannedISBN(raw);
   }
   async function handleScannedISBN(rawIsbn){
-    const { results, googleDetail } = await searchByISBN(rawIsbn);
+    const { results, error } = await searchByISBN(rawIsbn);
     if(results.length === 0){
       closeScannerModal();
-      if(googleDetail) console.warn('Recherche ISBN — Google Books :', googleDetail);
+      if(error) console.warn('Recherche ISBN — échec :', error);
       openAddConfirmModal({ cv: pickCoverClass(), isbn13: cleanISBN(rawIsbn) }, true);
       return;
     }
