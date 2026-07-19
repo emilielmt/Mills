@@ -2920,6 +2920,7 @@
   const BOOK_API = {
     googleBooks: 'https://www.googleapis.com/books/v1/volumes',
     openLibrary: 'https://openlibrary.org/search.json',
+    googleBooksApiKey: 'AIzaSyCNCE8ykNGkPvSKm7KiCY9ZpICcjPXduLM',
     timeoutMs: 7000,
   };
   const searchCache = new Map();
@@ -3442,12 +3443,27 @@
         ],
         verbose:false,
       });
-      await qrScanner.start(
-        { facingMode: 'environment' },
-        { fps:10, qrbox:{ width:230, height:150 } },
-        onScanDecoded,
-        () => {} // pas de détection sur cette frame : normal, on ignore silencieusement
-      );
+      try{
+        await qrScanner.start(
+          {
+            facingMode: 'environment',
+            // Demande une mise au point continue (autofocus) plutôt qu'une image figée sur certains téléphones.
+            advanced: [{ focusMode: 'continuous' }],
+          },
+          { fps:10, qrbox:{ width:250, height:160 }, aspectRatio: 1.7777 },
+          onScanDecoded,
+          () => {}
+        );
+      } catch(constraintErr){
+        // Certains appareils/navigateurs rejettent la contrainte de mise au point : on retente sans elle.
+        console.warn('Contrainte de mise au point non supportée, nouvelle tentative sans elle :', constraintErr);
+        await qrScanner.start(
+          { facingMode: 'environment' },
+          { fps:10, qrbox:{ width:250, height:160 } },
+          onScanDecoded,
+          () => {}
+        );
+      }
       setScannerStatus('Placez le code-barres ou le QR code du livre dans le cadre.');
     } catch(err){
       console.warn('Scanner indisponible :', err);
@@ -3499,10 +3515,10 @@
     await handleScannedISBN(raw);
   }
   async function handleScannedISBN(rawIsbn){
-    const { results, error } = await searchByISBN(rawIsbn);
+    const { results, googleDetail } = await searchByISBN(rawIsbn);
     if(results.length === 0){
       closeScannerModal();
-      if(error) console.warn('Recherche ISBN — échec :', error);
+      if(googleDetail) console.warn('Recherche ISBN — échec :', googleDetail);
       openAddConfirmModal({ cv: pickCoverClass(), isbn13: cleanISBN(rawIsbn) }, true);
       return;
     }
