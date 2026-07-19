@@ -2830,6 +2830,7 @@
   function saveContinueProgress(){
     const idx = state.continueTargetIdx;
     const b = books[idx];
+    const wasAlreadyFinished = (b.s === 'termine'); // capturé avant modification, pour ne pas re-déclencher la fin de lecture
     const newPageCount = Math.max(1, Number(document.getElementById('contPageCountInput').value) || b.pageCount || 1);
     b.pageCount = newPageCount;
     let pagesRead = Number(document.getElementById('contPagesInput').value) || 0;
@@ -2844,8 +2845,8 @@
     renderHomeInsights();
     persistState();
 
-    if(pagesRead >= b.pageCount){
-      // Dernière page atteinte : on marque directement comme terminé (date du jour), sans fenêtre supplémentaire.
+    if(!wasAlreadyFinished && pagesRead >= b.pageCount){
+      // Dernière page atteinte pour la première fois : on marque comme terminé (date du jour), sans fenêtre supplémentaire.
       b.s = 'termine';
       b.fin = new Date().toISOString().slice(0,10);
       b.note = b.note || 4;
