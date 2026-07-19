@@ -835,6 +835,21 @@
     background:var(--accent-pale); color:var(--accent-deep);
   }
   .auth-gate-message.error{ background:#F4DEDA; color:#B4483F; }
+
+  /* En-tête coloré réutilisable pour les titres principaux (Bibliothèque, Ajouter, Calendrier, Compte) */
+  .page-hero-header{
+    position:relative; overflow:hidden; margin:-4px -20px 18px; padding:18px 20px 26px;
+    background:linear-gradient(160deg, var(--btn-color), var(--btn-color-deep));
+  }
+  .page-hero-shape{ position:absolute; border-radius:50%; background:rgba(255,255,255,.12); }
+  .page-hero-shape-1{ width:130px; height:130px; top:-55px; right:-35px; }
+  .page-hero-row{ position:relative; display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+  .page-hero-eyebrow{ color:rgba(255,255,255,.8); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; margin-bottom:2px; }
+  .page-hero-title{ font-family:'Playfair Display', serif; font-weight:700; font-size:24px; color:#fff; margin:0; letter-spacing:-.01em; }
+  .page-hero-subtitle{ color:rgba(255,255,255,.85); font-size:12.5px; font-weight:600; margin-top:3px; }
+  .page-hero-btn{ background:rgba(255,255,255,.2) !important; flex:0 0 auto; }
+  .page-hero-btn .icon{ color:#fff; }
+  .page-hero-wave{ position:absolute; left:0; right:0; bottom:-1px; width:100%; height:22px; display:block; }
   .auth-gate-loading{
     position:absolute; inset:0; z-index:70; background:var(--bg); display:flex;
     align-items:center; justify-content:center; color:var(--ink-soft); font-size:13px;
@@ -1075,16 +1090,18 @@
 
       <!-- ============ BIBLIOTHÈQUE ============ -->
       <section class="screen" id="screen-library">
-        <div class="toprow" style="align-items:flex-start;">
-          <div>
-            <h1 class="page-title">Bibliothèque</h1>
-            <div class="lib-subtitle" id="libCountLabel">16 livres</div>
-          </div>
-          <div class="toprow-actions">
-            <button class="circle-btn" id="openLibMenuBtn">
+        <div class="page-hero-header">
+          <div class="page-hero-shape page-hero-shape-1"></div>
+          <div class="page-hero-row">
+            <div>
+              <h1 class="page-hero-title">Bibliothèque</h1>
+              <div class="page-hero-subtitle" id="libCountLabel">16 livres</div>
+            </div>
+            <button class="circle-btn page-hero-btn" id="openLibMenuBtn">
               <svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
             </button>
           </div>
+          <svg class="page-hero-wave" viewBox="0 0 400 22" preserveAspectRatio="none"><path d="M0 11 Q100 -2 200 9 T400 8 V22 H0 Z" fill="var(--bg)"/></svg>
         </div>
 
         <div class="search-bar" style="margin-top:14px;">
@@ -1142,8 +1159,12 @@
 
       <!-- ============ AJOUTER ============ -->
       <section class="screen" id="screen-add">
-        <div class="eyebrow">Nouvelle entrée</div>
-        <h1 class="page-title">Ajouter un livre</h1>
+        <div class="page-hero-header">
+          <div class="page-hero-shape page-hero-shape-1"></div>
+          <div class="page-hero-eyebrow">Nouvelle entrée</div>
+          <h1 class="page-hero-title">Ajouter un livre</h1>
+          <svg class="page-hero-wave" viewBox="0 0 400 22" preserveAspectRatio="none"><path d="M0 11 Q100 -2 200 9 T400 8 V22 H0 Z" fill="var(--bg)"/></svg>
+        </div>
 
         <div class="search-bar" style="margin-top:16px;">
           <svg class="icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/></svg>
@@ -1174,8 +1195,12 @@
 
       <!-- ============ CALENDRIER ============ -->
       <section class="screen" id="screen-calendar">
-        <div class="eyebrow">Suivi chronologique</div>
-        <h1 class="page-title">Calendrier</h1>
+        <div class="page-hero-header">
+          <div class="page-hero-shape page-hero-shape-1"></div>
+          <div class="page-hero-eyebrow">Suivi chronologique</div>
+          <h1 class="page-hero-title">Calendrier</h1>
+          <svg class="page-hero-wave" viewBox="0 0 400 22" preserveAspectRatio="none"><path d="M0 11 Q100 -2 200 9 T400 8 V22 H0 Z" fill="var(--bg)"/></svg>
+        </div>
 
         <div class="cal-nav" style="margin-top:16px;">
           <button class="circle-btn" onclick="shiftMonth(-1)"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
@@ -1197,8 +1222,12 @@
 
       <!-- ============ COMPTE ============ -->
       <section class="screen" id="screen-account">
-        <div class="eyebrow">Mon espace</div>
-        <h1 class="page-title">Compte</h1>
+        <div class="page-hero-header">
+          <div class="page-hero-shape page-hero-shape-1"></div>
+          <div class="page-hero-eyebrow">Mon espace</div>
+          <h1 class="page-hero-title">Compte</h1>
+          <svg class="page-hero-wave" viewBox="0 0 400 22" preserveAspectRatio="none"><path d="M0 11 Q100 -2 200 9 T400 8 V22 H0 Z" fill="var(--bg)"/></svg>
+        </div>
 
         <div class="profile-head" style="margin-top:16px;">
           <div class="avatar" id="profileAvatar">M</div>
