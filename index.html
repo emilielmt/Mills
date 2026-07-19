@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{ --radius-lg:30px; --radius-md:22px; --radius-sm:15px; --radius-pill:999px; }
   *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -779,6 +780,25 @@
   .google-btn{ width:100%; display:flex; align-items:center; justify-content:center; gap:10px; border:1.5px solid var(--line); background:var(--card); border-radius:12px; padding:11px; font-family:'Inter'; font-weight:600; font-size:14px; cursor:pointer; color:var(--ink); }
   .g-logo{ width:18px; height:18px; border-radius:50%; background:conic-gradient(#4285F4 0 25%, #34A853 25% 50%, #FBBC05 50% 75%, #EA4335 75% 100%); display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:800; font-family:'Inter'; }
   .auth-switch{ text-align:center; margin-top:16px; font-size:13px; color:var(--ink-soft); }
+
+  /* Portail de connexion / inscription : recouvre tout l'écran tant qu'on n'est pas connecté */
+  .auth-gate{
+    position:absolute; inset:0; z-index:60; background:var(--bg); display:none;
+    flex-direction:column; justify-content:center; padding:32px 26px; overflow-y:auto;
+  }
+  .auth-gate.show{ display:flex; }
+  .auth-gate-inner{ width:100%; }
+  .auth-gate-brand{ display:flex; flex-direction:column; align-items:center; margin-bottom:28px; }
+  .auth-gate-mark{ font-size:38px; line-height:1; margin-bottom:6px; }
+  .auth-gate-message{
+    font-size:12.5px; padding:11px 14px; border-radius:12px; margin-bottom:16px; line-height:1.45;
+    background:var(--accent-pale); color:var(--accent-deep);
+  }
+  .auth-gate-message.error{ background:#F4DEDA; color:#B4483F; }
+  .auth-gate-loading{
+    position:absolute; inset:0; z-index:70; background:var(--bg); display:flex;
+    align-items:center; justify-content:center; color:var(--ink-soft); font-size:13px;
+  }
   .auth-switch b{ color:var(--accent-deep); cursor:pointer; }
   .linked-row{ display:flex; align-items:center; gap:10px; padding:12px; background:var(--card-alt); border-radius:12px; margin-bottom:12px; }
   .linked-row .icon{ color:var(--accent-deep); }
@@ -815,6 +835,39 @@
     </div>
 
     <div class="screens">
+
+      <!-- ============ Portail de connexion / inscription (Supabase) ============ -->
+      <div class="auth-gate" id="authGate">
+        <div class="auth-gate-inner">
+          <div class="auth-gate-brand">
+            <div class="auth-gate-mark">📖</div>
+            <h1 class="page-title" style="margin:10px 0 2px;">Feuillet</h1>
+            <p class="subtle" style="text-align:center;">Votre bibliothèque, toujours avec vous.</p>
+          </div>
+
+          <div id="authGateMessage" class="auth-gate-message" style="display:none;"></div>
+
+          <!-- Connexion -->
+          <div id="authPanelSignIn">
+            <div class="field"><label>Adresse email</label><input type="email" id="authSignInEmail" placeholder="vous@email.com" autocomplete="email" /></div>
+            <div class="field"><label>Mot de passe</label><input type="password" id="authSignInPassword" placeholder="••••••••" autocomplete="current-password" /></div>
+            <button class="link-btn" style="margin-bottom:14px;" onclick="handleForgotPassword()">Mot de passe oublié ?</button>
+            <button class="btn-primary" style="width:100%;" id="authSignInBtn" onclick="handleSignIn()">Se connecter</button>
+            <div class="auth-switch">Pas encore de compte&nbsp;? <b onclick="showAuthPanel('signup')">En créer un</b></div>
+          </div>
+
+          <!-- Inscription -->
+          <div id="authPanelSignUp" style="display:none;">
+            <div class="field"><label>Prénom</label><input type="text" id="authSignUpFirstName" placeholder="Votre prénom" autocomplete="given-name" /></div>
+            <div class="field"><label>Adresse email</label><input type="email" id="authSignUpEmail" placeholder="vous@email.com" autocomplete="email" /></div>
+            <div class="field"><label>Mot de passe</label><input type="password" id="authSignUpPassword" placeholder="8 caractères minimum" autocomplete="new-password" /></div>
+            <button class="btn-primary" style="width:100%;" id="authSignUpBtn" onclick="handleSignUp()">Créer mon compte</button>
+            <div class="auth-switch">Déjà inscrite&nbsp;? <b onclick="showAuthPanel('signin')">Se connecter</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-gate-loading" id="authLoadingScreen">Chargement…</div>
 
       <!-- ============ ACCUEIL ============ -->
       <section class="screen active" id="screen-home">
@@ -1348,7 +1401,7 @@
                   <span class="s-label">Réinitialiser mes données</span>
                   <svg class="icon" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
                 </div>
-                <div class="settings-row danger">
+                <div class="settings-row danger" onclick="handleSignOut()">
                   <svg class="icon" viewBox="0 0 24 24"><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="M15 16l4-4-4-4"/><path d="M19 12H9"/></svg>
                   <span class="s-label">Déconnexion</span>
                 </div>
@@ -4364,6 +4417,116 @@
     renderProfile();
     persistState();
     closeOverlay('profileEditOverlay');
+  }
+
+  /* ================= Authentification (Supabase) ================= */
+  const SUPABASE_URL = 'https://pfvbnxxgawkxqkzmgszm.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_rDtH9YLsod7HHaZbmj6dlw_kS_P9L4E';
+  let supabaseClient = null;
+  if(window.supabase && typeof window.supabase.createClient === 'function'){
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } else {
+    console.error("Supabase n'a pas pu se charger (bibliothèque indisponible ou pas de connexion internet).");
+  }
+
+  function showAuthPanel(which){
+    document.getElementById('authPanelSignIn').style.display = which==='signin' ? '' : 'none';
+    document.getElementById('authPanelSignUp').style.display = which==='signup' ? '' : 'none';
+    hideAuthGateMessage();
+  }
+  function showAuthGateMessage(text, isError){
+    const el = document.getElementById('authGateMessage');
+    el.textContent = text;
+    el.style.display = '';
+    el.classList.toggle('error', !!isError);
+  }
+  function hideAuthGateMessage(){ document.getElementById('authGateMessage').style.display = 'none'; }
+  function setAuthButtonsLoading(loading){
+    document.getElementById('authSignInBtn').disabled = loading;
+    document.getElementById('authSignUpBtn').disabled = loading;
+  }
+
+  async function handleSignUp(){
+    if(!supabaseClient){ showAuthGateMessage("Service indisponible pour le moment. Vérifiez votre connexion internet et rechargez la page.", true); return; }
+    const firstName = document.getElementById('authSignUpFirstName').value.trim();
+    const email = document.getElementById('authSignUpEmail').value.trim();
+    const password = document.getElementById('authSignUpPassword').value;
+    if(!email || !password){ showAuthGateMessage('Merci de renseigner un email et un mot de passe.', true); return; }
+    if(password.length < 8){ showAuthGateMessage('Le mot de passe doit contenir au moins 8 caractères.', true); return; }
+    setAuthButtonsLoading(true);
+    try{
+      const { error } = await supabaseClient.auth.signUp({
+        email, password,
+        options: { data: { first_name: firstName } }
+      });
+      if(error){ showAuthGateMessage(error.message, true); return; }
+      showAuthGateMessage('Compte créé ! Vérifiez votre boîte mail pour confirmer votre adresse avant de vous connecter.', false);
+      showAuthPanel('signin');
+    } catch(err){
+      console.warn('Inscription :', err);
+      showAuthGateMessage("Impossible de créer le compte pour le moment. Vérifiez votre connexion internet.", true);
+    } finally {
+      setAuthButtonsLoading(false);
+    }
+  }
+
+  async function handleSignIn(){
+    if(!supabaseClient){ showAuthGateMessage("Service indisponible pour le moment. Vérifiez votre connexion internet et rechargez la page.", true); return; }
+    const email = document.getElementById('authSignInEmail').value.trim();
+    const password = document.getElementById('authSignInPassword').value;
+    if(!email || !password){ showAuthGateMessage('Merci de renseigner votre email et votre mot de passe.', true); return; }
+    setAuthButtonsLoading(true);
+    try{
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if(error){ showAuthGateMessage(error.message, true); return; }
+      // Succès : onAuthStateChange se charge d'afficher l'application.
+    } catch(err){
+      console.warn('Connexion :', err);
+      showAuthGateMessage("Connexion impossible pour le moment. Vérifiez votre connexion internet.", true);
+    } finally {
+      setAuthButtonsLoading(false);
+    }
+  }
+
+  async function handleForgotPassword(){
+    if(!supabaseClient){ showAuthGateMessage("Service indisponible pour le moment.", true); return; }
+    const email = document.getElementById('authSignInEmail').value.trim();
+    if(!email){ showAuthGateMessage('Renseignez votre email ci-dessus, puis retapez sur "Mot de passe oublié".', true); return; }
+    try{
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+      if(error){ showAuthGateMessage(error.message, true); return; }
+      showAuthGateMessage('Un email de réinitialisation vous a été envoyé.', false);
+    } catch(err){
+      console.warn('Mot de passe oublié :', err);
+      showAuthGateMessage("Impossible d'envoyer l'email pour le moment.", true);
+    }
+  }
+
+  async function handleSignOut(){
+    if(!supabaseClient) return;
+    try{ await supabaseClient.auth.signOut(); } catch(err){ console.warn('Déconnexion :', err); }
+  }
+
+  function showApp(){
+    document.getElementById('authGate').classList.remove('show');
+    document.getElementById('authLoadingScreen').style.display = 'none';
+  }
+  function showAuthGateScreen(){
+    document.getElementById('authGate').classList.add('show');
+    document.getElementById('authLoadingScreen').style.display = 'none';
+    showAuthPanel('signin');
+  }
+
+  // Se déclenche immédiatement avec la session actuelle (connecté ou non), puis à chaque changement.
+  if(supabaseClient){
+    supabaseClient.auth.onAuthStateChange((_event, session) => {
+      if(session){ showApp(); } else { showAuthGateScreen(); }
+    });
+  } else {
+    // Supabase n'a pas pu se charger : on affiche quand même l'écran de connexion, avec un message clair,
+    // plutôt que de laisser l'utilisateur bloqué sur l'écran de chargement indéfiniment.
+    showAuthGateScreen();
+    showAuthGateMessage("Impossible de contacter le service de connexion. Vérifiez votre connexion internet et rechargez la page.", true);
   }
 
   /* ================= Initialisation ================= */
