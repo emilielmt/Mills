@@ -799,6 +799,19 @@
     position:absolute; inset:0; z-index:70; background:var(--bg); display:flex;
     align-items:center; justify-content:center; color:var(--ink-soft); font-size:13px;
   }
+  .password-field-wrap{ position:relative; }
+  .password-field-wrap input{ padding-right:44px; width:100%; }
+  .password-toggle-btn{
+    position:absolute; right:4px; top:50%; transform:translateY(-50%); background:none; border:none;
+    width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-faint);
+  }
+  .password-toggle-btn .icon{ width:18px; height:18px; }
+  .password-toggle-btn.active{ color:var(--accent-deep); }
+  .auth-check-icon{
+    width:64px; height:64px; border-radius:50%; background:var(--accent-pale); margin:0 auto 18px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .auth-check-icon .icon{ width:28px; height:28px; color:var(--accent-deep); }
   .auth-switch b{ color:var(--accent-deep); cursor:pointer; }
   .linked-row{ display:flex; align-items:center; gap:10px; padding:12px; background:var(--card-alt); border-radius:12px; margin-bottom:12px; }
   .linked-row .icon{ color:var(--accent-deep); }
@@ -850,9 +863,19 @@
           <!-- Connexion -->
           <div id="authPanelSignIn">
             <div class="field"><label>Adresse email</label><input type="email" id="authSignInEmail" placeholder="vous@email.com" autocomplete="email" /></div>
-            <div class="field"><label>Mot de passe</label><input type="password" id="authSignInPassword" placeholder="••••••••" autocomplete="current-password" /></div>
+            <div class="field">
+              <label>Mot de passe</label>
+              <div class="password-field-wrap">
+                <input type="password" id="authSignInPassword" placeholder="••••••••" autocomplete="current-password" />
+                <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('authSignInPassword', this)" title="Afficher le mot de passe">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
             <button class="link-btn" style="margin-bottom:14px;" onclick="handleForgotPassword()">Mot de passe oublié ?</button>
             <button class="btn-primary" style="width:100%;" id="authSignInBtn" onclick="handleSignIn()">Se connecter</button>
+            <div class="divider-or"><span style="flex:1;height:1px;background:var(--line);"></span>ou<span style="flex:1;height:1px;background:var(--line);"></span></div>
+            <button class="google-btn" onclick="handleGoogleSignIn()"><div class="g-logo">G</div>Continuer avec Google</button>
             <div class="auth-switch">Pas encore de compte&nbsp;? <b onclick="showAuthPanel('signup')">En créer un</b></div>
           </div>
 
@@ -860,9 +883,27 @@
           <div id="authPanelSignUp" style="display:none;">
             <div class="field"><label>Prénom</label><input type="text" id="authSignUpFirstName" placeholder="Votre prénom" autocomplete="given-name" /></div>
             <div class="field"><label>Adresse email</label><input type="email" id="authSignUpEmail" placeholder="vous@email.com" autocomplete="email" /></div>
-            <div class="field"><label>Mot de passe</label><input type="password" id="authSignUpPassword" placeholder="8 caractères minimum" autocomplete="new-password" /></div>
+            <div class="field">
+              <label>Mot de passe</label>
+              <div class="password-field-wrap">
+                <input type="password" id="authSignUpPassword" placeholder="8 caractères minimum" autocomplete="new-password" />
+                <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('authSignUpPassword', this)" title="Afficher le mot de passe">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
             <button class="btn-primary" style="width:100%;" id="authSignUpBtn" onclick="handleSignUp()">Créer mon compte</button>
             <div class="auth-switch">Déjà inscrite&nbsp;? <b onclick="showAuthPanel('signin')">Se connecter</b></div>
+          </div>
+
+          <!-- Confirmation après inscription -->
+          <div id="authPanelCheckEmail" style="display:none;text-align:center;">
+            <div class="auth-check-icon">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6Z"/><path d="M4 7l8 6 8-6"/></svg>
+            </div>
+            <div class="modal-title" style="margin-bottom:8px;">Inscription terminée !</div>
+            <p class="subtle" style="margin-bottom:22px;">Un email de confirmation vient de vous être envoyé à <b id="authCheckEmailAddress" style="color:var(--ink);"></b>.<br/><br/>Ouvrez cet email et cliquez sur le lien de confirmation pour activer votre compte, puis revenez ici pour vous connecter.</p>
+            <button class="btn-primary" style="width:100%;" onclick="showAuthPanel('signin')">Retour à la connexion</button>
           </div>
         </div>
       </div>
@@ -4432,6 +4473,7 @@
   function showAuthPanel(which){
     document.getElementById('authPanelSignIn').style.display = which==='signin' ? '' : 'none';
     document.getElementById('authPanelSignUp').style.display = which==='signup' ? '' : 'none';
+    document.getElementById('authPanelCheckEmail').style.display = which==='checkEmail' ? '' : 'none';
     hideAuthGateMessage();
   }
   function showAuthGateMessage(text, isError){
@@ -4444,6 +4486,12 @@
   function setAuthButtonsLoading(loading){
     document.getElementById('authSignInBtn').disabled = loading;
     document.getElementById('authSignUpBtn').disabled = loading;
+  }
+  function togglePasswordVisibility(inputId, btn){
+    const input = document.getElementById(inputId);
+    const showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    btn.classList.toggle('active', !showing);
   }
 
   async function handleSignUp(){
@@ -4460,8 +4508,8 @@
         options: { data: { first_name: firstName } }
       });
       if(error){ showAuthGateMessage(error.message, true); return; }
-      showAuthGateMessage('Compte créé ! Vérifiez votre boîte mail pour confirmer votre adresse avant de vous connecter.', false);
-      showAuthPanel('signin');
+      document.getElementById('authCheckEmailAddress').textContent = email;
+      showAuthPanel('checkEmail');
     } catch(err){
       console.warn('Inscription :', err);
       showAuthGateMessage("Impossible de créer le compte pour le moment. Vérifiez votre connexion internet.", true);
@@ -4505,6 +4553,20 @@
   async function handleSignOut(){
     if(!supabaseClient) return;
     try{ await supabaseClient.auth.signOut(); } catch(err){ console.warn('Déconnexion :', err); }
+  }
+  async function handleGoogleSignIn(){
+    if(!supabaseClient){ showAuthGateMessage("Service indisponible pour le moment.", true); return; }
+    try{
+      const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.href }
+      });
+      if(error) showAuthGateMessage(error.message, true);
+      // En cas de succès, la page est redirigée vers Google puis revient automatiquement — rien d'autre à faire ici.
+    } catch(err){
+      console.warn('Connexion Google :', err);
+      showAuthGateMessage("Connexion avec Google impossible pour le moment.", true);
+    }
   }
 
   function showApp(){
