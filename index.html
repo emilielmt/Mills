@@ -3440,6 +3440,9 @@
     if(typeof Html5Qrcode === 'undefined'){
       return scannerFallback("Le lecteur de code n'a pas pu se charger (connexion internet requise). Saisissez l'ISBN manuellement.");
     }
+    if(typeof Html5QrcodeSupportedFormats === 'undefined'){
+      return scannerFallback("Le lecteur de code s'est chargé de façon incomplète. Rechargez la page, ou saisissez l'ISBN manuellement.");
+    }
 
     try{
       qrScanner = new Html5Qrcode('scannerVideoContainer', {
@@ -3475,7 +3478,8 @@
       setScannerStatus('Placez le code-barres ou le QR code du livre dans le cadre, ou saisissez son ISBN ci-dessous.');
     } catch(err){
       console.warn('Scanner indisponible :', err);
-      return scannerFallback('Accès à la caméra refusé ou indisponible. Autorisez la caméra dans les réglages, ou saisissez le code manuellement.');
+      const detail = err && (err.name || err.message) ? ` (${err.name || ''}${err.name && err.message ? ' — ' : ''}${err.message || ''})` : '';
+      return scannerFallback(`Accès à la caméra refusé ou indisponible${detail}. Autorisez la caméra dans les réglages, ou saisissez le code manuellement.`);
     }
   }
   async function onScanDecoded(decodedText){
