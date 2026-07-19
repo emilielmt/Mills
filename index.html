@@ -128,8 +128,8 @@
 
   .eyebrow{
     font-family:'Inter', sans-serif; font-weight:700;
-    font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
-    color:var(--accent-deep); opacity:.85; margin:0 0 10px;
+    font-size:12.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent-deep); opacity:1; margin:0 0 10px;
   }
   .subtle{ color:var(--ink-soft); font-size:14px; }
   .section{ margin-top:26px; }
@@ -1021,7 +1021,7 @@
         </div>
 
         <div class="section" style="margin-top:18px;" id="homeCurrentBlock">
-          <div class="eyebrow" style="margin-bottom:8px;" id="homeCurrentLabel">En cours de lecture</div>
+          <div class="eyebrow" style="margin-bottom:8px;" id="homeCurrentLabel">Lecture en cours</div>
           <div id="homeCurrentContent"><!-- injecté par JS : renderHomeCurrent() --></div>
         </div>
 
@@ -2608,7 +2608,7 @@
     const content = document.getElementById('homeCurrentContent');
 
     if(current.length===0){
-      label.textContent = 'En cours de lecture';
+      label.textContent = 'Lecture en cours';
       content.innerHTML = `<div class="card" style="padding:10px 8px 22px;">
         ${emptyState('<path d="M6 4h11a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H8a2 2 0 0 1-2-2V4Z"/><path d="M6 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2"/>', 'Un livre vous attend', 'Aucune lecture en cours pour le moment — et si vous en commenciez une ?')}
         <button class="btn-primary" style="width:calc(100% - 24px);margin:4px auto 0;display:flex;" onclick="goTo('library')">Choisir un livre dans ma PAL</button>
@@ -2617,7 +2617,7 @@
     }
 
     if(current.length===1){
-      label.textContent = 'En cours de lecture';
+      label.textContent = 'Lecture en cours';
       const b = current[0];
       const pct = Math.round((b.pagesRead/(b.pageCount||1))*100) || 0;
       content.innerHTML = `
@@ -2635,8 +2635,8 @@
                 <span class="pm-pages">${b.pagesRead} / ${b.pageCount} pages</span>
                 <span class="pm-pct">${pct}%</span>
               </div>
-              <button class="btn-primary" onclick="openContinueModal(${b.idx})">
-                Continuer la lecture
+              <button class="btn-primary" style="width:auto;align-self:flex-start;padding:11px 30px;" onclick="openContinueModal(${b.idx})">
+                Lire
                 <svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </button>
             </div>
@@ -2646,7 +2646,7 @@
     }
 
     // Plusieurs lectures en cours : grille de carrés, 2 par colonne
-    label.textContent = `En cours de lecture (${current.length})`;
+    label.textContent = `Lecture en cours (${current.length})`;
     content.innerHTML = `<div class="current-grid">
       ${current.map(b=>{
         const pct = Math.round((b.pagesRead/(b.pageCount||1))*100) || 0;
@@ -2696,7 +2696,7 @@
           <div class="chrono-idle-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 8v5l3 2"/><circle cx="12" cy="13" r="8"/><path d="M9 2h6"/></svg></div>
           <div class="chrono-idle-text">
             <div class="chrono-idle-title">Démarrer une session</div>
-            <div class="chrono-idle-sub">Suivez votre temps de lecture en direct.</div>
+            <div class="chrono-idle-sub">Suis ton temps de lecture en direct.</div>
           </div>
           <button class="chrono-idle-btn" onclick="startReadingTimer()" title="Démarrer">
             <svg class="icon" viewBox="0 0 24 24"><path d="M7 5l12 7-12 7V5Z"/></svg>
@@ -2817,7 +2817,7 @@
       <div class="fh-body">
         <div class="fh-title">${escapeHtml(pick.t)}</div>
         <div class="fh-author">${escapeHtml(pick.a)}</div>
-        ${quoteText ? `<p class="fh-quote">"${escapeHtml(quoteText)}"</p>` : `<p class="fh-quote subtle-note">Un de vos coups de cœur — ouvrez son journal pour y laisser une note.</p>`}
+        ${quoteText ? `<p class="fh-quote">"${escapeHtml(quoteText)}"</p>` : `<p class="fh-quote subtle-note">Un de tes livres coup de cœur à commencer sans tarder !</p>`}
       </div>
     </div>`;
   }
@@ -2847,7 +2847,7 @@
         <div class="sg-author">${escapeHtml(b.a)}</div>
         <div class="sg-genre">${escapeHtml(b.genre||'')}${b.pageCount ? ' · '+b.pageCount+' pages' : ''}</div>
         <div class="sg-actions">
-          <button class="btn-primary" style="flex:1;" onclick="startReadingSuggestion(${idx})">Commencer ce livre</button>
+          <button class="btn-primary" style="flex:0 0 auto;padding:11px 30px;" onclick="startReadingSuggestion(${idx})">Lire</button>
           <button class="sg-shuffle" onclick="shuffleSuggestion()" title="Un autre livre">
             <svg class="icon" viewBox="0 0 24 24"><path d="M17 3l4 4-4 4"/><path d="M3 7h11a4 4 0 0 1 4 4v0"/><path d="M7 21l-4-4 4-4"/><path d="M21 17H10a4 4 0 0 1-4-4v0"/></svg>
           </button>
