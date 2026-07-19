@@ -784,12 +784,52 @@
   /* Portail de connexion / inscription : recouvre tout l'écran tant qu'on n'est pas connecté */
   .auth-gate{
     position:absolute; inset:0; z-index:60; background:var(--bg); display:none;
-    flex-direction:column; justify-content:center; padding:32px 26px; overflow-y:auto;
+    flex-direction:column; overflow-y:auto;
   }
   .auth-gate.show{ display:flex; }
-  .auth-gate-inner{ width:100%; }
-  .auth-gate-brand{ display:flex; flex-direction:column; align-items:center; margin-bottom:28px; }
-  .auth-gate-mark{ font-size:38px; line-height:1; margin-bottom:6px; }
+
+  .auth-gate-hero{
+    position:relative; overflow:hidden; flex:0 0 auto; padding:52px 26px 34px;
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    background:linear-gradient(160deg, var(--btn-color), var(--btn-color-deep));
+  }
+  .auth-gate-hero-shape{ position:absolute; border-radius:50%; background:rgba(255,255,255,.14); }
+  .auth-gate-hero-shape-1{ width:180px; height:180px; top:-70px; right:-50px; }
+  .auth-gate-hero-shape-2{ width:120px; height:120px; bottom:-10px; left:-30px; background:rgba(255,255,255,.1); }
+  .auth-gate-sparkle{ position:relative; color:rgba(255,255,255,.75); font-size:16px; position:absolute; animation:authSparkleFloat 3.4s ease-in-out infinite; }
+  .auth-gate-sparkle-1{ top:40px; left:15%; font-size:14px; animation-delay:0s; }
+  .auth-gate-sparkle-2{ top:78px; right:18%; font-size:20px; animation-delay:.9s; }
+  .auth-gate-sparkle-3{ top:20px; right:38%; font-size:11px; animation-delay:1.7s; }
+  @keyframes authSparkleFloat{
+    0%, 100%{ transform:translateY(0) rotate(0deg); opacity:.6; }
+    50%{ transform:translateY(-8px) rotate(15deg); opacity:1; }
+  }
+  .auth-gate-ribbon{
+    position:relative; width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,.2);
+    display:flex; align-items:center; justify-content:center; margin-bottom:16px;
+    box-shadow:0 0 0 8px rgba(255,255,255,.08);
+    animation:authRibbonIn .6s cubic-bezier(.22,.61,.36,1) both, authRibbonGlow 2.6s ease-in-out .6s infinite;
+  }
+  .auth-gate-ribbon svg{ width:30px; height:30px; }
+  @keyframes authRibbonIn{ from{ opacity:0; transform:scale(.4) rotate(-12deg); } to{ opacity:1; transform:scale(1) rotate(0); } }
+  @keyframes authRibbonGlow{ 0%,100%{ box-shadow:0 0 0 8px rgba(255,255,255,.08); } 50%{ box-shadow:0 0 0 14px rgba(255,255,255,.14); } }
+  .auth-gate-title{
+    position:relative; font-family:'Playfair Display', serif; font-weight:700; font-size:36px;
+    color:#fff; margin:0 0 6px; letter-spacing:-.01em;
+    animation:authFadeUp .6s .15s cubic-bezier(.22,.61,.36,1) both;
+  }
+  .auth-gate-tagline{
+    position:relative; color:rgba(255,255,255,.88); font-size:13.5px; margin:0;
+    animation:authFadeUp .6s .28s cubic-bezier(.22,.61,.36,1) both;
+  }
+  @keyframes authFadeUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+  .auth-gate-wave{ position:absolute; left:0; right:0; bottom:-1px; width:100%; height:32px; display:block; }
+
+  .auth-gate-card{
+    flex:1; background:var(--card); position:relative;
+    padding:22px 26px 40px; animation:authCardIn .55s .1s cubic-bezier(.22,.61,.36,1) both;
+  }
+  @keyframes authCardIn{ from{ opacity:0; transform:translateY(18px); } to{ opacity:1; transform:translateY(0); } }
   .auth-gate-message{
     font-size:12.5px; padding:11px 14px; border-radius:12px; margin-bottom:16px; line-height:1.45;
     background:var(--accent-pale); color:var(--accent-deep);
@@ -851,13 +891,29 @@
 
       <!-- ============ Portail de connexion / inscription (Supabase) ============ -->
       <div class="auth-gate" id="authGate">
-        <div class="auth-gate-inner">
-          <div class="auth-gate-brand">
-            <div class="auth-gate-mark">📖</div>
-            <h1 class="page-title" style="margin:10px 0 2px;">Feuillet</h1>
-            <p class="subtle" style="text-align:center;">Votre bibliothèque, toujours avec vous.</p>
-          </div>
+        <div class="auth-gate-hero">
+          <div class="auth-gate-hero-shape auth-gate-hero-shape-1"></div>
+          <div class="auth-gate-hero-shape auth-gate-hero-shape-2"></div>
+          <div class="auth-gate-sparkle auth-gate-sparkle-1">✦</div>
+          <div class="auth-gate-sparkle auth-gate-sparkle-2">✦</div>
+          <div class="auth-gate-sparkle auth-gate-sparkle-3">✧</div>
 
+          <div class="auth-gate-ribbon">
+            <svg viewBox="0 0 48 48" fill="none">
+              <path d="M9 8a2 2 0 0 1 2-2h11v34l-13 4V8Z" fill="rgba(255,255,255,.92)"/>
+              <path d="M26 6h11a2 2 0 0 1 2 2v32l-13-4V6Z" fill="rgba(255,255,255,.7)"/>
+              <path d="M24 6v34" stroke="rgba(255,140,40,.5)" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <h1 class="auth-gate-title">Feuillet</h1>
+          <p class="auth-gate-tagline">Votre bibliothèque, toujours avec vous.</p>
+
+          <svg class="auth-gate-wave" viewBox="0 0 400 40" preserveAspectRatio="none">
+            <path d="M0 20 Q 100 0 200 18 T 400 16 V40 H0 Z" fill="var(--card)"/>
+          </svg>
+        </div>
+
+        <div class="auth-gate-card">
           <div id="authGateMessage" class="auth-gate-message" style="display:none;"></div>
 
           <!-- Connexion -->
@@ -4572,11 +4628,17 @@
   function showApp(){
     document.getElementById('authGate').classList.remove('show');
     document.getElementById('authLoadingScreen').style.display = 'none';
+    goTo('home'); // repart toujours sur un écran connu après une connexion, pour éviter un état bloqué
   }
   function showAuthGateScreen(){
     document.getElementById('authGate').classList.add('show');
     document.getElementById('authLoadingScreen').style.display = 'none';
     showAuthPanel('signin');
+    // Réinitialise les champs de connexion pour repartir sur une base propre à chaque fois.
+    ['authSignInEmail','authSignInPassword','authSignUpFirstName','authSignUpEmail','authSignUpPassword'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.value = '';
+    });
   }
 
   // Se déclenche immédiatement avec la session actuelle (connecté ou non), puis à chaque changement.
