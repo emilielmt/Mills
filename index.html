@@ -1738,6 +1738,10 @@
         </div>
 
         <div class="field" style="margin-top:18px;">
+          <label>Nombre total de pages</label>
+          <input type="number" id="contPageCountInput" min="1" oninput="updateContinuePreview()" />
+        </div>
+        <div class="field" style="margin-top:14px;">
           <label>Pages lues à ce jour</label>
           <input type="number" id="contPagesInput" min="0" oninput="updateContinuePreview()" />
         </div>
@@ -2708,6 +2712,7 @@
     }
     document.getElementById('contPagesInput').value = b.pagesRead || 0;
     document.getElementById('contPagesInput').max = b.pageCount;
+    document.getElementById('contPageCountInput').value = b.pageCount || '';
     renderBookRatingStars(b.note || 0);
     updateContinuePreview();
     openOverlayEl('continueModalOverlay');
@@ -2815,15 +2820,18 @@
   function updateContinuePreview(){
     const idx = state.continueTargetIdx;
     const b = books[idx];
+    const pageCount = Math.max(1, Number(document.getElementById('contPageCountInput').value) || b.pageCount || 1);
     let pagesRead = Number(document.getElementById('contPagesInput').value) || 0;
-    pagesRead = Math.max(0, Math.min(pagesRead, b.pageCount));
-    const pct = Math.round((pagesRead / b.pageCount) * 100);
+    pagesRead = Math.max(0, Math.min(pagesRead, pageCount));
+    const pct = Math.round((pagesRead / pageCount) * 100);
     document.getElementById('contBarFill').style.width = pct + '%';
-    document.getElementById('contCaption').textContent = `${pagesRead} sur ${b.pageCount} pages · ${pct}%`;
+    document.getElementById('contCaption').textContent = `${pagesRead} sur ${pageCount} pages · ${pct}%`;
   }
   function saveContinueProgress(){
     const idx = state.continueTargetIdx;
     const b = books[idx];
+    const newPageCount = Math.max(1, Number(document.getElementById('contPageCountInput').value) || b.pageCount || 1);
+    b.pageCount = newPageCount;
     let pagesRead = Number(document.getElementById('contPagesInput').value) || 0;
     pagesRead = Math.max(0, Math.min(pagesRead, b.pageCount));
     const delta = pagesRead - (b.pagesRead || 0);
@@ -3419,8 +3427,8 @@
 
   async function openScannerModal(){
     openOverlayEl('scannerModalOverlay');
-    document.getElementById('scannerManualField').style.display = 'none';
-    document.getElementById('scannerManualBtn').style.display = 'none';
+    document.getElementById('scannerManualField').style.display = '';
+    document.getElementById('scannerManualBtn').style.display = '';
     document.getElementById('scannerFrame').style.display = '';
     document.getElementById('scannerVideoContainer').innerHTML = '';
     scannerBusy = false;
@@ -3464,18 +3472,11 @@
           () => {}
         );
       }
-      setScannerStatus('Placez le code-barres ou le QR code du livre dans le cadre.');
+      setScannerStatus('Placez le code-barres ou le QR code du livre dans le cadre, ou saisissez son ISBN ci-dessous.');
     } catch(err){
       console.warn('Scanner indisponible :', err);
       return scannerFallback('Accès à la caméra refusé ou indisponible. Autorisez la caméra dans les réglages, ou saisissez le code manuellement.');
     }
-
-    // Après 20 secondes sans détection exploitable : proposer la saisie manuelle plutôt que de laisser l'utilisateur bloqué.
-    scannerTimeoutId = setTimeout(()=>{
-      setScannerStatus("Aucun code reconnu. Vérifiez l'éclairage, ou saisissez l'ISBN manuellement ci-dessous.");
-      document.getElementById('scannerManualField').style.display = '';
-      document.getElementById('scannerManualBtn').style.display = '';
-    }, 20000);
   }
   async function onScanDecoded(decodedText){
     if(scannerBusy) return; // ignore les détections répétées pendant qu'on traite déjà la précédente
