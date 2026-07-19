@@ -879,6 +879,26 @@
   .phone[data-mode="dark"] .btn-primary{ box-shadow:0 8px 18px rgba(0,0,0,.35); opacity:1; }
   .phone[data-mode="dark"] .btn-primary:active{ box-shadow:0 4px 10px rgba(0,0,0,.35); }
   .phone[data-mode="dark"] .nav-btn.fab{ box-shadow:0 8px 18px rgba(0,0,0,.4); }
+
+  /* En mode sombre, les grands en-têtes perdent leur couleur vive au profit de tons neutres et sobres */
+  .phone[data-mode="dark"] .page-hero-header,
+  .phone[data-mode="dark"] .auth-gate-hero{
+    background:linear-gradient(160deg, var(--card-alt), var(--bg-deep));
+  }
+  .phone[data-mode="dark"] .page-hero-title,
+  .phone[data-mode="dark"] .auth-gate-title{ color:var(--ink); }
+  .phone[data-mode="dark"] .page-hero-eyebrow,
+  .phone[data-mode="dark"] .page-hero-subtitle,
+  .phone[data-mode="dark"] .auth-gate-tagline{ color:var(--ink-soft); }
+  .phone[data-mode="dark"] .page-hero-shape,
+  .phone[data-mode="dark"] .auth-gate-hero-shape{ background:rgba(255,255,255,.03); }
+  .phone[data-mode="dark"] .page-hero-btn,
+  .phone[data-mode="dark"] .auth-gate-ribbon{ background:var(--card) !important; box-shadow:none; }
+  .phone[data-mode="dark"] .page-hero-btn .icon,
+  .phone[data-mode="dark"] .auth-gate-ribbon svg path{ color:var(--ink); fill:var(--ink-soft) !important; }
+  .phone[data-mode="dark"] .auth-gate-sparkle{ color:var(--ink-faint); }
+  .phone[data-mode="dark"] .page-hero-wave path,
+  .phone[data-mode="dark"] .auth-gate-wave path{ fill:var(--bg); }
   .phone[data-mode="dark"] .search-bar:focus-within,
   .phone[data-mode="dark"] .field textarea:focus,
   .phone[data-mode="dark"] .field input:focus{ box-shadow:0 0 0 3px rgba(0,0,0,.25); }
@@ -2152,7 +2172,7 @@
     createType:'collection', createPicked:new Set(),
     finishTargetIdx:null, continueTargetIdx:null, addConfirmData:null, addConfStatus:'pal', goalDetailKey:null,
     homeGreetingDynamic:true, suggestionBookIdx:null, currentScreen:'home',
-    profile:{ firstName:'Mills', lastName:'Aubert', displayName:'Mills', email:'mills.aubert@email.com', birthdate:'' },
+    profile:{ firstName:'', lastName:'', displayName:'', email:'', birthdate:'' },
     homeBlockVisibility:{
       homeCurrentBlock:true, homeStreakBlock:true, homeStatsBlock:true, homeChronoBlock:true,
       homeGoalsBlock:true, homeFavoriteBlock:true, homeSuggestionBlock:true,
@@ -4658,6 +4678,17 @@
     document.getElementById('authLoadingScreen').style.display = 'none';
     goTo('home'); // repart toujours sur un écran connu après une connexion, pour éviter un état bloqué
   }
+  /** Reprend le prénom/email du compte Supabase tant que la personne n'a pas déjà personnalisé son profil dans l'app. */
+  function applySupabaseUserToProfile(user){
+    if(!user) return;
+    const meta = user.user_metadata || {};
+    const inferredFirstName = meta.first_name || meta.given_name || (meta.full_name || meta.name || '').split(' ')[0] || '';
+    if(!state.profile.firstName && inferredFirstName) state.profile.firstName = inferredFirstName;
+    if(!state.profile.displayName && inferredFirstName) state.profile.displayName = inferredFirstName;
+    if(!state.profile.email && user.email) state.profile.email = user.email;
+    renderProfile();
+    persistState();
+  }
   function showAuthGateScreen(){
     document.getElementById('authGate').classList.add('show');
     document.getElementById('authLoadingScreen').style.display = 'none';
@@ -4672,7 +4703,7 @@
   // Se déclenche immédiatement avec la session actuelle (connecté ou non), puis à chaque changement.
   if(supabaseClient){
     supabaseClient.auth.onAuthStateChange((_event, session) => {
-      if(session){ showApp(); } else { showAuthGateScreen(); }
+      if(session){ applySupabaseUserToProfile(session.user); showApp(); } else { showAuthGateScreen(); }
     });
   } else {
     // Supabase n'a pas pu se charger : on affiche quand même l'écran de connexion, avec un message clair,
