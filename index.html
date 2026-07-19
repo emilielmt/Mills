@@ -941,7 +941,7 @@
             </svg>
           </div>
           <h1 class="auth-gate-title">Feuillet</h1>
-          <p class="auth-gate-tagline">Votre bibliothèque, toujours avec vous.</p>
+          <p class="auth-gate-tagline">Ta bibliothèque, toujours avec toi.</p>
 
           <svg class="auth-gate-wave" viewBox="0 0 400 40" preserveAspectRatio="none">
             <path d="M0 20 Q 100 0 200 18 T 400 16 V40 H0 Z" fill="var(--card)"/>
@@ -953,7 +953,7 @@
 
           <!-- Connexion -->
           <div id="authPanelSignIn">
-            <div class="field"><label>Adresse email</label><input type="email" id="authSignInEmail" placeholder="vous@email.com" autocomplete="email" /></div>
+            <div class="field"><label>Adresse email</label><input type="email" id="authSignInEmail" placeholder="toi@email.com" autocomplete="email" /></div>
             <div class="field">
               <label>Mot de passe</label>
               <div class="password-field-wrap">
@@ -972,8 +972,8 @@
 
           <!-- Inscription -->
           <div id="authPanelSignUp" style="display:none;">
-            <div class="field"><label>Prénom</label><input type="text" id="authSignUpFirstName" placeholder="Votre prénom" autocomplete="given-name" /></div>
-            <div class="field"><label>Adresse email</label><input type="email" id="authSignUpEmail" placeholder="vous@email.com" autocomplete="email" /></div>
+            <div class="field"><label>Prénom</label><input type="text" id="authSignUpFirstName" placeholder="Ton prénom" autocomplete="given-name" /></div>
+            <div class="field"><label>Adresse email</label><input type="email" id="authSignUpEmail" placeholder="toi@email.com" autocomplete="email" /></div>
             <div class="field">
               <label>Mot de passe</label>
               <div class="password-field-wrap">
@@ -993,7 +993,7 @@
               <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6Z"/><path d="M4 7l8 6 8-6"/></svg>
             </div>
             <div class="modal-title" style="margin-bottom:8px;">Inscription terminée !</div>
-            <p class="subtle" style="margin-bottom:22px;">Un email de confirmation vient de vous être envoyé à <b id="authCheckEmailAddress" style="color:var(--ink);"></b>.<br/><br/>Ouvrez cet email et cliquez sur le lien de confirmation pour activer votre compte, puis revenez ici pour vous connecter.</p>
+            <p class="subtle" style="margin-bottom:22px;">Un email de confirmation vient de t'être envoyé à <b id="authCheckEmailAddress" style="color:var(--ink);"></b>.<br/><br/>Ouvre cet email et clique sur le lien de confirmation pour activer ton compte, puis reviens ici pour te connecter.</p>
             <button class="btn-primary" style="width:100%;" onclick="showAuthPanel('signin')">Retour à la connexion</button>
           </div>
         </div>
@@ -1100,7 +1100,7 @@
         </div>
 
         <div class="section" id="homeSuggestionBlock">
-          <div class="eyebrow" style="margin-bottom:8px;">Et si vous lisiez…</div>
+          <div class="eyebrow" style="margin-bottom:8px;">Et si tu lisais…</div>
           <div id="homeSuggestionContent"><!-- injecté par JS : renderSuggestion() --></div>
         </div>
 
@@ -1206,7 +1206,7 @@
         <div class="section">
           <div class="eyebrow" id="searchResultsLabel">Résultats</div>
           <div id="searchResultsContainer">
-            <p class="hint">Tapez un titre, un nom d'auteur ou un ISBN pour lancer la recherche — Google Books et Open Library sont interrogés automatiquement.</p>
+            <p class="hint">Tape un titre, un nom d'auteur ou un ISBN pour lancer la recherche — Google Books et Open Library sont interrogés automatiquement.</p>
           </div>
         </div>
         <div class="bottom-space"></div>
@@ -1590,7 +1590,7 @@
           </div>
           <div class="action-row" onclick="closeOverlay('libraryFabMenu');openCreateModal('collection');">
             <div class="aic"><svg class="icon" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="4"/></svg></div>
-            <div><div class="arow-label">Créer une collection</div><div class="arow-sub">Un groupe de livres à votre image</div></div>
+            <div><div class="arow-label">Créer une collection</div><div class="arow-sub">Un groupe de livres à ton image</div></div>
           </div>
           <div class="action-row" onclick="closeOverlay('libraryFabMenu');openCreateModal('serie');">
             <div class="aic"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5Z"/><path d="M3 13l9 5 9-5"/></svg></div>
@@ -1694,7 +1694,7 @@
           <div class="action-list">
             <div class="action-row" onclick="closeOverlay('libMenuOverlay');openCreateModal('collection')">
               <div class="aic"><svg class="icon" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="4"/><path d="M12 9v6M9 12h6"/></svg></div>
-              <div><div class="arow-label">Créer une collection</div><div class="arow-sub">Un groupe de livres à votre image</div></div>
+              <div><div class="arow-label">Créer une collection</div><div class="arow-sub">Un groupe de livres à ton image</div></div>
             </div>
             <div class="action-row" onclick="closeOverlay('libMenuOverlay');openCreateModal('serie')">
               <div class="aic"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5Z"/><path d="M3 13l9 5 9-5"/></svg></div>
@@ -1796,7 +1796,7 @@
           <input type="text" id="createNameInput" placeholder="Ex. Romans d'hiver" />
         </div>
         <div class="field">
-          <label>Ajouter des livres (autant que vous voulez)</label>
+          <label>Ajouter des livres (autant que tu veux)</label>
           <div class="mini-book-list" id="createBookList"></div>
         </div>
         <div class="modal-actions">
@@ -1853,7 +1853,7 @@
     <div class="overlay center" id="deleteCollectionConfirmOverlay">
       <div class="modal">
         <div class="modal-title" id="dcTitle">Supprimer cette collection ?</div>
-        <p class="hint" style="text-align:left;">Les livres qu'elle contient resteront dans votre bibliothèque — seul le regroupement est supprimé.</p>
+        <p class="hint" style="text-align:left;">Les livres qu'elle contient resteront dans ta bibliothèque — seul le regroupement est supprimé.</p>
         <div class="modal-actions">
           <button class="btn-ghost" style="flex:1;" onclick="closeOverlay('deleteCollectionConfirmOverlay')">Annuler</button>
           <button class="btn-danger" style="flex:1;" onclick="deleteCollectionForReal()">Supprimer</button>
@@ -1878,7 +1878,7 @@
     <div class="overlay center" id="createGoalModalOverlay">
       <div class="modal">
         <div class="modal-title">Créer un objectif</div>
-        <p class="hint" style="text-align:left;margin-top:-8px;">Choisissez une suggestion ou écrivez le vôtre.</p>
+        <p class="hint" style="text-align:left;margin-top:-8px;">Choisis une suggestion ou écris le tien.</p>
 
         <div class="goal-preset-list">
           <button class="goal-preset-chip" onclick="pickGoalPreset(this,'daily','Lire 20 minutes par jour',20)">⏱️ Lire 20 minutes par jour</button>
@@ -1889,7 +1889,7 @@
         </div>
 
         <div class="field" style="margin-top:16px;">
-          <label>Ou un objectif à vous</label>
+          <label>Ou un objectif à toi</label>
           <input type="text" id="customGoalLabelInput" placeholder="Ex. Relire ma saga préférée" oninput="onCustomGoalTyped()" />
         </div>
         <div class="field" id="customGoalMinutesField" style="display:none;">
@@ -2000,7 +2000,7 @@
 
         <div class="field" style="margin-top:14px;">
           <label>Nouvelle note</label>
-          <textarea id="journalTextarea" rows="3" placeholder="Une phrase qui vous a marquée, une impression, une théorie sur la suite…"></textarea>
+          <textarea id="journalTextarea" rows="3" placeholder="Une phrase qui t'a marquée, une impression, une théorie sur la suite…"></textarea>
         </div>
 
         <div class="modal-actions">
@@ -2020,7 +2020,7 @@
           </div>
         </div>
         <div class="search-error" id="addConfNotFoundBanner" style="display:none;padding:12px;margin-top:12px;">
-          <p style="margin:0;">🔍 Aucune fiche trouvée automatiquement pour cet ISBN — complétez les champs ci-dessous à la main.</p>
+          <p style="margin:0;">🔍 Aucune fiche trouvée automatiquement pour cet ISBN — complète les champs ci-dessous à la main.</p>
         </div>
         <p class="hint" id="addConfDescription" style="text-align:left;margin-top:10px;display:none;"></p>
         <p class="hint" id="addConfHint" style="text-align:left;margin-top:10px;">Les informations sont préremplies automatiquement — modifiables si besoin.</p>
@@ -2055,7 +2055,7 @@
         <div class="scanner-frame" id="scannerFrame">
           <div id="scannerVideoContainer" class="scanner-video"></div>
         </div>
-        <p class="scanner-status" id="scannerStatus">Placez le code-barres ou le QR code du livre dans le cadre.</p>
+        <p class="scanner-status" id="scannerStatus">Place le code-barres ou le QR code du livre dans le cadre.</p>
 
         <div class="field" id="scannerManualField" style="display:none;">
           <label>Saisir l'ISBN manuellement</label>
@@ -2103,7 +2103,7 @@
         <div class="modal-title">Session terminée</div>
         <p class="subtle" id="chronoSaveDuration" style="margin-top:-8px;margin-bottom:14px;"></p>
         <div class="field"><label>Pages lues durant cette session (optionnel)</label><input type="number" id="chronoPagesInput" min="0" placeholder="Ex. 18" /></div>
-        <p class="hint" style="text-align:left;margin-top:0;">Cette session sera comptabilisée dans votre série de lecture et vos statistiques.</p>
+        <p class="hint" style="text-align:left;margin-top:0;">Cette session sera comptabilisée dans ta série de lecture et tes statistiques.</p>
         <div class="modal-actions">
           <button class="btn-ghost" style="flex:1;" onclick="discardChronoSession()">Ignorer</button>
           <button class="btn-primary" style="flex:1;" onclick="confirmChronoSession()">Enregistrer la session</button>
@@ -2116,7 +2116,7 @@
       <div class="modal celebrate-modal">
         <div class="celebrate-emoji">🎉</div>
         <div class="celebrate-title">Bravo !</div>
-        <p class="subtle" style="margin:2px 0 14px;">Vous avez terminé</p>
+        <p class="subtle" style="margin:2px 0 14px;">Tu as terminé</p>
         <div class="celebrate-cover" id="celebrateCover"></div>
         <div class="celebrate-book-title" id="celebrateTitle">—</div>
         <div class="subtle" id="celebrateAuthor" style="margin-bottom:14px;">—</div>
@@ -2130,7 +2130,7 @@
     <div class="overlay center" id="resetDataConfirmOverlay">
       <div class="modal">
         <div class="modal-title">Réinitialiser toutes les données ?</div>
-        <p class="hint" style="text-align:left;">Cela efface définitivement tous vos livres, collections, séries et réglages enregistrés sur cet appareil, et recharge l'application avec des données vierges. Cette action est irréversible.</p>
+        <p class="hint" style="text-align:left;">Cela efface définitivement tous tes livres, collections, séries et réglages enregistrés sur cet appareil, et recharge l'application avec des données vierges. Cette action est irréversible.</p>
         <div class="modal-actions">
           <button class="btn-ghost" style="flex:1;" onclick="closeOverlay('resetDataConfirmOverlay')">Annuler</button>
           <button class="btn-danger" style="flex:1;" onclick="confirmResetData()">Tout réinitialiser</button>
@@ -2149,7 +2149,7 @@
         <div class="field"><label>Nom</label><input type="text" id="peLastName" placeholder="Nom" /></div>
         <div class="field"><label>Nom d'affichage dans l'app</label><input type="text" id="peDisplayName" placeholder="Ex. Mills" /></div>
         <div class="field"><label>Date de naissance</label><input type="date" id="peBirthdate" /></div>
-        <div class="field"><label>Adresse email</label><input type="email" id="peEmail" placeholder="vous@email.com" /></div>
+        <div class="field"><label>Adresse email</label><input type="email" id="peEmail" placeholder="toi@email.com" /></div>
         <div class="field"><label>Nouveau mot de passe</label><input type="password" id="pePassword" placeholder="Laisser vide pour ne pas changer" /></div>
         <p class="hint" style="text-align:left;margin-top:-4px;" id="peSavedHint"></p>
         <div class="modal-actions">
@@ -2530,7 +2530,7 @@
           <div class="cg-icon">🎯</div>
           <div class="cg-body">
             <div class="cg-label ${g.done?'done':''}">${escapeHtml(g.label)}</div>
-            <div class="cg-sub">${g.done ? 'Atteint 🎉' : 'À réaliser quand vous voulez'}</div>
+            <div class="cg-sub">${g.done ? 'Atteint 🎉' : 'À réaliser quand tu veux'}</div>
           </div>
           <button class="cg-check ${g.done?'done':''}" onclick="toggleCustomGoalDone('${g.id}')" title="Marquer comme atteint">
             <svg class="icon" viewBox="0 0 24 24"><path d="M5 12l5 5L19 7"/></svg>
@@ -2610,7 +2610,7 @@
     if(current.length===0){
       label.textContent = 'Lecture en cours';
       content.innerHTML = `<div class="card" style="padding:10px 8px 22px;">
-        ${emptyState('<path d="M6 4h11a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H8a2 2 0 0 1-2-2V4Z"/><path d="M6 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2"/>', 'Un livre vous attend', 'Aucune lecture en cours pour le moment — et si vous en commenciez une ?')}
+        ${emptyState('<path d="M6 4h11a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H8a2 2 0 0 1-2-2V4Z"/><path d="M6 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2"/>', "Un livre t'attend", 'Aucune lecture en cours pour le moment — et si tu en commençais une ?')}
         <button class="btn-primary" style="width:calc(100% - 24px);margin:4px auto 0;display:flex;" onclick="goTo('library')">Choisir un livre dans ma PAL</button>
       </div>`;
       return;
@@ -2637,7 +2637,6 @@
               </div>
               <button class="btn-primary" style="width:auto;align-self:flex-start;padding:11px 30px;" onclick="openContinueModal(${b.idx})">
                 Lire
-                <svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </button>
             </div>
           </div>
@@ -2672,7 +2671,7 @@
     if(streak===0){
       wrap.innerHTML = `<div class="streak-card">
         <div class="streak-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3s-5 5.2-5 9.2A5 5 0 0 0 12 21a5 5 0 0 0 5-8.8c-1 1.5-2 1.8-2 1.8.6-3-1-6-3-11Z"/></svg></div>
-        <div><div class="streak-num">Pas encore de série</div><div class="streak-msg">Lisez quelques pages aujourd'hui pour démarrer votre série de lecture.</div></div>
+        <div><div class="streak-num">Pas encore de série</div><div class="streak-msg">Lis quelques pages aujourd'hui pour démarrer ta série de lecture.</div></div>
       </div>`;
       return;
     }
@@ -2769,7 +2768,7 @@
   function getGreetingParts(){
     const hour = new Date().getHours();
     if(hour>=5 && hour<12) return { text:'Bonjour', tagline:'Prête à tourner quelques pages ?' };
-    if(hour>=12 && hour<18) return { text:'Bon après-midi', tagline:'Une pause lecture vous ferait du bien ?' };
+    if(hour>=12 && hour<18) return { text:'Bon après-midi', tagline:'Une pause lecture te ferait du bien ?' };
     return { text:'Bonsoir', tagline:'Une pause lecture avant la nuit ?' };
   }
   function renderGreeting(){
@@ -2831,7 +2830,7 @@
       container.innerHTML = emptyState(
         '<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 12.2l2 2 5-5"/>',
         'Rien à suggérer pour l\'instant',
-        'Ajoutez des livres à votre PAL pour recevoir des suggestions.'
+        'Ajoute des livres à ta PAL pour recevoir des suggestions.'
       );
       return;
     }
@@ -2847,7 +2846,7 @@
         <div class="sg-author">${escapeHtml(b.a)}</div>
         <div class="sg-genre">${escapeHtml(b.genre||'')}${b.pageCount ? ' · '+b.pageCount+' pages' : ''}</div>
         <div class="sg-actions">
-          <button class="btn-primary" style="flex:0 0 auto;padding:11px 30px;" onclick="startReadingSuggestion(${idx})">Lire</button>
+          <button class="btn-primary" style="width:auto;flex:0 0 auto;padding:11px 30px;" onclick="startReadingSuggestion(${idx})">Lire</button>
           <button class="sg-shuffle" onclick="shuffleSuggestion()" title="Un autre livre">
             <svg class="icon" viewBox="0 0 24 24"><path d="M17 3l4 4-4 4"/><path d="M3 7h11a4 4 0 0 1 4 4v0"/><path d="M7 21l-4-4 4-4"/><path d="M21 17H10a4 4 0 0 1-4-4v0"/></svg>
           </button>
@@ -3062,7 +3061,7 @@
     const idx = state.continueTargetIdx;
     if(idx==null) return;
     document.getElementById('deleteConfirmText').textContent =
-      `« ${books[idx].t} » sera retiré de votre bibliothèque, y compris de vos collections. Cette action est définitive.`;
+      `« ${books[idx].t} » sera retiré de ta bibliothèque, y compris de tes collections. Cette action est définitive.`;
     closeOverlay('continueModalOverlay');
     openOverlayEl('deleteConfirmOverlay');
   }
@@ -3198,7 +3197,7 @@
       }
       if(isNetworkError){
         const host = (()=>{ try{ return new URL(url).hostname; } catch(e){ return 'ce service'; } })();
-        throw new Error(`Impossible de joindre ${host} — vérifiez votre connexion, ou qu'aucune extension (bloqueur de publicités...) ne bloque les requêtes.`);
+        throw new Error(`Impossible de joindre ${host} — vérifie ta connexion, ou qu'aucune extension (bloqueur de publicités...) ne bloque les requêtes.`);
       }
       throw err;
     }
@@ -3401,7 +3400,7 @@
       searchRequestId++; // invalide toute requête déjà en vol
       document.getElementById('searchResultsLabel').textContent = 'Résultats';
       document.getElementById('searchResultsContainer').innerHTML =
-        '<p class="hint">Tapez un titre, un nom d\'auteur ou un ISBN pour lancer la recherche — Google Books et Open Library sont interrogés automatiquement.</p>';
+        '<p class="hint">Tape un titre, un nom d\'auteur ou un ISBN pour lancer la recherche — Google Books et Open Library sont interrogés automatiquement.</p>';
       return;
     }
     searchDebounceTimer = setTimeout(()=>runBookSearch(query), 450);
@@ -3441,8 +3440,8 @@
       '<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
       'Introuvable',
       wasIsbnSearch
-        ? "Aucune édition ne correspond à cet ISBN. Vous pouvez l'ajouter manuellement."
-        : "Aucun résultat pour cette recherche. Vous pouvez l'ajouter manuellement."
+        ? "Aucune édition ne correspond à cet ISBN. Tu peux l'ajouter manuellement."
+        : "Aucun résultat pour cette recherche. Tu peux l'ajouter manuellement."
     ) + diagnostic + `<button class="btn-secondary" onclick="openManualAddModal()">Ajouter manuellement</button>`;
   }
   function renderSearchError(){
@@ -3450,7 +3449,7 @@
     document.getElementById('searchResultsContainer').innerHTML = `
       <div class="search-error">
         <svg class="icon" viewBox="0 0 24 24"><path d="M12 9v4M12 16.5v.01"/><circle cx="12" cy="12" r="9"/></svg>
-        <p>Impossible de contacter le service de recherche — vérifiez votre connexion.</p>
+        <p>Impossible de contacter le service de recherche — vérifie ta connexion.</p>
         <button class="btn-secondary" onclick="openManualAddModal()">Ajouter manuellement</button>
       </div>`;
   }
@@ -3640,7 +3639,7 @@
       return scannerFallback("Le lecteur de code n'a pas pu se charger (connexion internet requise). Saisissez l'ISBN manuellement.");
     }
     if(typeof Html5QrcodeSupportedFormats === 'undefined'){
-      return scannerFallback("Le lecteur de code s'est chargé de façon incomplète. Rechargez la page, ou saisissez l'ISBN manuellement.");
+      return scannerFallback("Le lecteur de code s'est chargé de façon incomplète. Recharge la page, ou saisis l'ISBN manuellement.");
     }
 
     try{
@@ -3674,11 +3673,11 @@
           () => {}
         );
       }
-      setScannerStatus('Placez le code-barres ou le QR code du livre dans le cadre, ou saisissez son ISBN ci-dessous.');
+      setScannerStatus('Place le code-barres ou le QR code du livre dans le cadre, ou saisis son ISBN ci-dessous.');
     } catch(err){
       console.warn('Scanner indisponible :', err);
       const detail = err && (err.name || err.message) ? ` (${err.name || ''}${err.name && err.message ? ' — ' : ''}${err.message || ''})` : '';
-      return scannerFallback(`Accès à la caméra refusé ou indisponible${detail}. Autorisez la caméra dans les réglages, ou saisissez le code manuellement.`);
+      return scannerFallback(`Accès à la caméra refusé ou indisponible${detail}. Autorise la caméra dans les réglages, ou saisis le code manuellement.`);
     }
   }
   async function onScanDecoded(decodedText){
@@ -4291,8 +4290,8 @@
   function openBulkDeleteConfirm(){
     const n = state.selected.size;
     document.getElementById('bulkDeleteConfirmText').textContent = n > 1
-      ? `${n} livres seront définitivement supprimés de votre bibliothèque.`
-      : `Ce livre sera définitivement supprimé de votre bibliothèque.`;
+      ? `${n} livres seront définitivement supprimés de ta bibliothèque.`
+      : `Ce livre sera définitivement supprimé de ta bibliothèque.`;
     openOverlayEl('bulkDeleteConfirmOverlay');
   }
   function confirmBulkDelete(){
@@ -4599,7 +4598,7 @@
   }
 
   async function handleSignUp(){
-    if(!supabaseClient){ showAuthGateMessage("Service indisponible pour le moment. Vérifiez votre connexion internet et rechargez la page.", true); return; }
+    if(!supabaseClient){ showAuthGateMessage("Service indisponible pour le moment. Vérifie ta connexion internet et recharge la page.", true); return; }
     const firstName = document.getElementById('authSignUpFirstName').value.trim();
     const email = document.getElementById('authSignUpEmail').value.trim();
     const password = document.getElementById('authSignUpPassword').value;
@@ -4616,17 +4615,17 @@
       showAuthPanel('checkEmail');
     } catch(err){
       console.warn('Inscription :', err);
-      showAuthGateMessage("Impossible de créer le compte pour le moment. Vérifiez votre connexion internet.", true);
+      showAuthGateMessage("Impossible de créer le compte pour le moment. Vérifie ta connexion internet.", true);
     } finally {
       setAuthButtonsLoading(false);
     }
   }
 
   async function handleSignIn(){
-    if(!supabaseClient){ showAuthGateMessage("Service indisponible pour le moment. Vérifiez votre connexion internet et rechargez la page.", true); return; }
+    if(!supabaseClient){ showAuthGateMessage("Service indisponible pour le moment. Vérifie ta connexion internet et recharge la page.", true); return; }
     const email = document.getElementById('authSignInEmail').value.trim();
     const password = document.getElementById('authSignInPassword').value;
-    if(!email || !password){ showAuthGateMessage('Merci de renseigner votre email et votre mot de passe.', true); return; }
+    if(!email || !password){ showAuthGateMessage('Merci de renseigner ton email et ton mot de passe.', true); return; }
     setAuthButtonsLoading(true);
     try{
       const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
@@ -4634,7 +4633,7 @@
       // Succès : onAuthStateChange se charge d'afficher l'application.
     } catch(err){
       console.warn('Connexion :', err);
-      showAuthGateMessage("Connexion impossible pour le moment. Vérifiez votre connexion internet.", true);
+      showAuthGateMessage("Connexion impossible pour le moment. Vérifie ta connexion internet.", true);
     } finally {
       setAuthButtonsLoading(false);
     }
@@ -4643,11 +4642,11 @@
   async function handleForgotPassword(){
     if(!supabaseClient){ showAuthGateMessage("Service indisponible pour le moment.", true); return; }
     const email = document.getElementById('authSignInEmail').value.trim();
-    if(!email){ showAuthGateMessage('Renseignez votre email ci-dessus, puis retapez sur "Mot de passe oublié".', true); return; }
+    if(!email){ showAuthGateMessage('Renseigne ton email ci-dessus, puis retape sur "Mot de passe oublié".', true); return; }
     try{
       const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
       if(error){ showAuthGateMessage(error.message, true); return; }
-      showAuthGateMessage('Un email de réinitialisation vous a été envoyé.', false);
+      showAuthGateMessage("Un email de réinitialisation t'a été envoyé.", false);
     } catch(err){
       console.warn('Mot de passe oublié :', err);
       showAuthGateMessage("Impossible d'envoyer l'email pour le moment.", true);
@@ -4709,7 +4708,7 @@
     // Supabase n'a pas pu se charger : on affiche quand même l'écran de connexion, avec un message clair,
     // plutôt que de laisser l'utilisateur bloqué sur l'écran de chargement indéfiniment.
     showAuthGateScreen();
-    showAuthGateMessage("Impossible de contacter le service de connexion. Vérifiez votre connexion internet et rechargez la page.", true);
+    showAuthGateMessage("Impossible de contacter le service de connexion. Vérifie ta connexion internet et recharge la page.", true);
   }
 
   /* ================= Initialisation ================= */
