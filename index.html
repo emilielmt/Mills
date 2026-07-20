@@ -867,6 +867,15 @@
     display:flex; align-items:center; justify-content:center;
   }
   .auth-check-icon .icon{ width:28px; height:28px; color:var(--accent-deep); }
+
+  .share-fallback-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; }
+  .share-fallback-btn{
+    display:flex; flex-direction:column; align-items:center; gap:8px; background:var(--card-alt);
+    border:none; border-radius:16px; padding:16px 10px; font-family:'Inter'; font-size:12.5px;
+    font-weight:600; color:var(--ink); cursor:pointer;
+  }
+  .sfb-icon{ width:42px; height:42px; border-radius:50%; background:var(--card); box-shadow:0 3px 8px rgba(0,0,0,.08); display:flex; align-items:center; justify-content:center; }
+  .sfb-icon .icon{ width:19px; height:19px; color:var(--accent-deep); }
   .auth-switch b{ color:var(--accent-deep); cursor:pointer; }
   .linked-row{ display:flex; align-items:center; gap:10px; padding:12px; background:var(--card-alt); border-radius:12px; margin-bottom:12px; }
   .linked-row .icon{ color:var(--accent-deep); }
@@ -1607,6 +1616,9 @@
       </button>
       <span class="st-count" id="selectCount">0 sélectionné(s)</span>
       <div class="st-actions">
+        <button class="st-action-btn" onclick="selectAllBooksInLibrary()" title="Tout sélectionner">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/></svg>
+        </button>
         <button class="st-action-btn" onclick="openBulkStatusModal()" title="Changer de statut">
           <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v6l4 2"/></svg>
         </button>
@@ -1832,6 +1844,7 @@
         </div>
 
         <div class="collection-detail-toolbar">
+          <button class="link-btn" id="cdSelectAllBtn" onclick="selectAllInCollectionDetail()" style="display:none;margin-right:auto;">Tout sélectionner</button>
           <button class="link-btn" id="cdSelectToggle" onclick="toggleCollectionSelectMode()">Sélectionner plusieurs</button>
         </div>
 
@@ -1936,12 +1949,12 @@
         </div>
 
         <div class="field" style="margin-top:18px;">
-          <label>Nombre total de pages</label>
-          <input type="number" id="contPageCountInput" min="1" oninput="updateContinuePreview()" />
-        </div>
-        <div class="field" style="margin-top:14px;">
           <label>Pages lues à ce jour</label>
           <input type="number" id="contPagesInput" min="0" oninput="updateContinuePreview()" />
+        </div>
+        <div class="field" style="margin-top:14px;">
+          <label>Nombre total de pages</label>
+          <input type="number" id="contPageCountInput" min="1" oninput="updateContinuePreview()" />
         </div>
 
         <div class="modal-actions">
@@ -1959,10 +1972,46 @@
           Changer le statut
         </button>
 
+        <button class="btn-secondary" style="margin-top:10px;" onclick="shareBookGeneral(state.continueTargetIdx)">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.2 10.6l7.6-4.2M8.2 13.4l7.6 4.2"/></svg>
+          Partager ce livre
+        </button>
+
+        <button class="btn-secondary" id="contShareProgressBtn" style="margin-top:10px;display:none;" onclick="shareReadingProgressCard(state.continueTargetIdx)">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 14l2.5-3 2 2L16 9"/></svg>
+          Partager ma progression
+        </button>
+
         <button class="btn-danger-text" onclick="openDeleteConfirm()">
           <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M10 11v6M14 11v6"/></svg>
           Supprimer ce livre
         </button>
+      </div>
+    </div>
+
+    <!-- ============ Repli de partage (si le partage natif n'est pas disponible) ============ -->
+    <div class="overlay center" id="shareFallbackOverlay">
+      <div class="modal">
+        <div class="modal-title">Partager</div>
+        <div class="share-fallback-grid">
+          <button class="share-fallback-btn" onclick="shareViaEmail()">
+            <div class="sfb-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
+            Email
+          </button>
+          <button class="share-fallback-btn" onclick="shareViaSMS()">
+            <div class="sfb-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4V4Z"/></svg></div>
+            SMS
+          </button>
+          <button class="share-fallback-btn" onclick="shareViaWhatsApp()">
+            <div class="sfb-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 20l1.4-4.2A8 8 0 1 1 9 18.4L4 20Z"/><path d="M8.5 9.5c0 3.5 3 6.5 6.5 6.5"/></svg></div>
+            WhatsApp
+          </button>
+          <button class="share-fallback-btn" onclick="shareCopyText()">
+            <div class="sfb-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V5a1 1 0 0 1 1-1h11"/></svg></div>
+            Copier
+          </button>
+        </div>
+        <button class="btn-ghost" style="width:100%;margin-top:16px;" onclick="closeOverlay('shareFallbackOverlay')">Fermer</button>
       </div>
     </div>
 
@@ -2910,6 +2959,7 @@
     document.getElementById('contPagesInput').value = b.pagesRead || 0;
     document.getElementById('contPagesInput').max = b.pageCount;
     document.getElementById('contPageCountInput').value = b.pageCount || '';
+    document.getElementById('contShareProgressBtn').style.display = b.s==='encours' ? '' : 'none';
     renderBookRatingStars(b.note || 0);
     updateContinuePreview();
     openOverlayEl('continueModalOverlay');
@@ -4029,6 +4079,20 @@
   });
 
   /* ================= Sélection multiple (uniquement via appui long désormais) ================= */
+  /** Sélectionne tous les livres actuellement affichés (respecte le filtre en cours) ; ré-appuyer désélectionne tout. */
+  function selectAllBooksInLibrary(){
+    const list = filteredBooks();
+    if(list.length===0) return;
+    const allAlreadySelected = list.every(b=>state.selected.has(b.idx));
+    if(allAlreadySelected){
+      list.forEach(b=>state.selected.delete(b.idx));
+    } else {
+      state.selectMode = true;
+      list.forEach(b=>state.selected.add(b.idx));
+    }
+    updateSelectToolbar();
+    renderLibrary();
+  }
   function cancelSelectMode(){
     state.selectMode=false; state.selected.clear();
     updateSelectToolbar(); renderLibrary();
@@ -4062,6 +4126,241 @@
     applyBulkStatus('termine', document.getElementById('bsFinDate').value);
   }
   /** Change le statut directement depuis la fiche d'un livre (réutilise la même feuille que la sélection groupée). */
+  /* ================= Partage d'un livre (natif, avec repli email/SMS/WhatsApp/copie) ================= */
+  state.shareText = '';
+  state.shareSubject = '';
+  function buildBookShareText(b){
+    let text = `📖 « ${b.t} » de ${b.a}`;
+    if(b.s==='termine'){
+      text += `\nTerminé${b.note ? ' — noté '+b.note+'/5' : ''}`;
+    } else if(b.s==='encours'){
+      const pct = b.p || Math.round((b.pagesRead/(b.pageCount||1))*100) || 0;
+      text += `\nEn cours de lecture — ${pct}%`;
+    } else if(b.s==='pal'){
+      text += `\nDans ma pile à lire`;
+    }
+    text += `\n\nPartagé depuis Feuillet 📚`;
+    return text;
+  }
+  async function shareBookGeneral(idx){
+    if(idx==null || !books[idx]) return;
+    const b = books[idx];
+    const text = buildBookShareText(b);
+    if(navigator.share){
+      try{ await navigator.share({ title: b.t, text }); return; }
+      catch(err){ if(err && err.name==='AbortError') return; /* sinon on retombe sur le repli */ }
+    }
+    state.shareText = text;
+    state.shareSubject = b.t;
+    openOverlayEl('shareFallbackOverlay');
+  }
+  function shareViaEmail(){
+    window.location.href = `mailto:?subject=${encodeURIComponent(state.shareSubject || 'Feuillet')}&body=${encodeURIComponent(state.shareText)}`;
+    closeOverlay('shareFallbackOverlay');
+  }
+  function shareViaSMS(){
+    window.location.href = `sms:?body=${encodeURIComponent(state.shareText)}`;
+    closeOverlay('shareFallbackOverlay');
+  }
+  function shareViaWhatsApp(){
+    window.open(`https://wa.me/?text=${encodeURIComponent(state.shareText)}`, '_blank');
+    closeOverlay('shareFallbackOverlay');
+  }
+  async function shareCopyText(){
+    try{
+      await navigator.clipboard.writeText(state.shareText);
+      const btn = document.querySelector('#shareFallbackOverlay .share-fallback-btn:last-child');
+      if(btn){
+        const original = btn.lastChild.textContent;
+        btn.lastChild.textContent = 'Copié !';
+        setTimeout(()=>{ btn.lastChild.textContent = original; closeOverlay('shareFallbackOverlay'); }, 700);
+        return;
+      }
+    } catch(err){ console.warn('Copie impossible :', err); }
+    closeOverlay('shareFallbackOverlay');
+  }
+
+  /* ================= Partage de la progression de lecture (image générée, façon story) ================= */
+  function roundRectPath(ctx, x, y, w, h, r){
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.arcTo(x+w, y, x+w, y+h, r);
+    ctx.arcTo(x+w, y+h, x, y+h, r);
+    ctx.arcTo(x, y+h, x, y, r);
+    ctx.arcTo(x, y, x+w, y, r);
+    ctx.closePath();
+  }
+  function loadImageSafe(url){
+    return new Promise((resolve, reject)=>{
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = url;
+      setTimeout(()=>reject(new Error('timeout image')), 6000);
+    });
+  }
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines){
+    const words = text.split(' ');
+    let line = '', lines = [];
+    for(const word of words){
+      const test = line ? line+' '+word : word;
+      if(ctx.measureText(test).width > maxWidth && line){ lines.push(line); line = word; }
+      else line = test;
+    }
+    if(line) lines.push(line);
+    if(maxLines && lines.length > maxLines){
+      lines = lines.slice(0, maxLines);
+      lines[maxLines-1] = lines[maxLines-1].replace(/\s*\S*$/, '') + '…';
+    }
+    lines.forEach((l,i)=> ctx.fillText(l, x, y + i*lineHeight));
+    return lines.length;
+  }
+  async function generateProgressCardCanvas(idx){
+    const b = books[idx];
+    if(!b) return null;
+    try{
+      await Promise.all([
+        document.fonts.load("700 44px 'Playfair Display'"),
+        document.fonts.load("600 26px 'Inter'"),
+        document.fonts.load("700 30px 'Inter'"),
+      ]);
+    } catch(e){ /* si les polices tardent, on dessine quand même avec la police par défaut */ }
+
+    const accentDeep = getComputedStyle(document.getElementById('phone')).getPropertyValue('--btn-color-deep').trim() || '#C97A2E';
+    const accent = getComputedStyle(document.getElementById('phone')).getPropertyValue('--btn-color').trim() || '#EFA85F';
+
+    const W = 1000, H = 1120;
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    // Fond dégradé dans la couleur du thème actif
+    const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+    bgGrad.addColorStop(0, accent);
+    bgGrad.addColorStop(1, accentDeep);
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Formes décoratives
+    ctx.fillStyle = 'rgba(255,255,255,.10)';
+    ctx.beginPath(); ctx.arc(W-90, 140, 240, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.07)';
+    ctx.beginPath(); ctx.arc(70, H-180, 180, 0, Math.PI*2); ctx.fill();
+
+    // En-tête "Feuillet"
+    ctx.fillStyle = '#fff';
+    ctx.font = "700 40px 'Playfair Display'";
+    ctx.textAlign = 'center';
+    ctx.fillText('Feuillet', W/2, 110);
+    ctx.font = "600 22px 'Inter'";
+    ctx.fillStyle = 'rgba(255,255,255,.85)';
+    ctx.fillText('Ma lecture en cours', W/2, 148);
+    ctx.textAlign = 'left';
+
+    // Carte blanche centrale
+    const cardX = 70, cardY = 230, cardW = W-140, cardH = 820;
+    ctx.fillStyle = 'rgba(255,255,255,.98)';
+    roundRectPath(ctx, cardX, cardY, cardW, cardH, 36);
+    ctx.fill();
+
+    // Couverture du livre
+    const coverW = 300, coverH = 450, coverX = cardX + (cardW-coverW)/2, coverY = cardY + 60;
+    let coverDrawn = false;
+    if(b.coverUrl){
+      try{
+        const img = await loadImageSafe(b.coverUrl);
+        ctx.save();
+        roundRectPath(ctx, coverX, coverY, coverW, coverH, 18);
+        ctx.clip();
+        ctx.drawImage(img, coverX, coverY, coverW, coverH);
+        ctx.restore();
+        coverDrawn = true;
+      } catch(e){ /* on retombe sur la couverture de secours ci-dessous */ }
+    }
+    if(!coverDrawn){
+      const coverGrad = ctx.createLinearGradient(coverX, coverY, coverX+coverW, coverY+coverH);
+      coverGrad.addColorStop(0, accent);
+      coverGrad.addColorStop(1, accentDeep);
+      ctx.save();
+      roundRectPath(ctx, coverX, coverY, coverW, coverH, 18);
+      ctx.clip();
+      ctx.fillStyle = coverGrad;
+      ctx.fillRect(coverX, coverY, coverW, coverH);
+      ctx.fillStyle = 'rgba(255,255,255,.95)';
+      ctx.font = "700 30px 'Playfair Display'";
+      ctx.textAlign = 'center';
+      wrapCanvasText(ctx, b.t, coverX+coverW/2, coverY+coverH/2, coverW-50, 38, 4);
+      ctx.textAlign = 'left';
+      ctx.restore();
+    }
+    ctx.shadowColor = 'rgba(0,0,0,.15)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 12;
+    ctx.strokeStyle = 'rgba(0,0,0,0)'; ctx.stroke();
+    ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+
+    // Titre + auteur
+    const textY = coverY + coverH + 70;
+    ctx.fillStyle = '#2E2A22';
+    ctx.font = "700 42px 'Playfair Display'";
+    ctx.textAlign = 'center';
+    const titleLines = wrapCanvasText(ctx, b.t, W/2, textY, cardW-100, 50, 2);
+    ctx.font = "500 26px 'Inter'";
+    ctx.fillStyle = '#8A8375';
+    ctx.fillText(b.a, W/2, textY + titleLines*50 + 10);
+
+    // Barre de progression
+    const pct = b.p || Math.round((b.pagesRead/(b.pageCount||1))*100) || 0;
+    const barY = textY + titleLines*50 + 60, barW = cardW-160, barX = cardX+80, barH = 22;
+    ctx.fillStyle = '#F0E6D8';
+    roundRectPath(ctx, barX, barY, barW, barH, 11);
+    ctx.fill();
+    ctx.fillStyle = accentDeep;
+    roundRectPath(ctx, barX, barY, Math.max(barW*(pct/100), barH), barH, 11);
+    ctx.fill();
+
+    ctx.font = "700 34px 'Inter'";
+    ctx.fillStyle = '#2E2A22';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${pct}%`, W/2, barY + 75);
+    ctx.font = "500 22px 'Inter'";
+    ctx.fillStyle = '#8A8375';
+    if(b.pageCount) ctx.fillText(`${b.pagesRead || 0} sur ${b.pageCount} pages`, W/2, barY + 108);
+    ctx.textAlign = 'left';
+
+    return canvas;
+  }
+  async function shareReadingProgressCard(idx){
+    if(idx==null || !books[idx]) return;
+    const btn = document.getElementById('contShareProgressBtn');
+    const originalLabel = btn ? btn.innerHTML : '';
+    if(btn) btn.innerHTML = 'Préparation de l\'image…';
+    try{
+      const canvas = await generateProgressCardCanvas(idx);
+      if(!canvas) return;
+      canvas.toBlob(async (blob)=>{
+        if(btn) btn.innerHTML = originalLabel;
+        if(!blob) return;
+        const file = new File([blob], 'feuillet-lecture.png', { type:'image/png' });
+        const b = books[idx];
+        if(navigator.share && navigator.canShare && navigator.canShare({ files:[file] })){
+          try{
+            await navigator.share({ files:[file], title:'Ma lecture en cours', text:`Je lis « ${b.t} » en ce moment 📖` });
+            return;
+          } catch(err){ if(err && err.name==='AbortError') return; }
+        }
+        // Repli : télécharger l'image si le partage natif de fichiers n'est pas disponible.
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'feuillet-lecture.png';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(()=>URL.revokeObjectURL(url), 4000);
+      }, 'image/png', 0.95);
+    } catch(err){
+      console.warn('Génération de la carte de progression impossible :', err);
+      if(btn) btn.innerHTML = originalLabel;
+    }
+  }
+
   function openStatusChangeForCurrentBook(){
     const idx = state.continueTargetIdx;
     if(idx==null) return;
@@ -4154,6 +4453,7 @@
     document.getElementById('cdName').textContent = c.name;
     document.getElementById('cdDeleteLabel').textContent = c.type==='serie' ? 'Supprimer cette série' : 'Supprimer cette collection';
     document.getElementById('cdSelectToggle').textContent = 'Sélectionner plusieurs';
+    document.getElementById('cdSelectAllBtn').style.display = 'none';
     document.getElementById('cdBulkActions').style.display = 'none';
 
     renderCollectionDetailList();
@@ -4183,7 +4483,21 @@
     state.cdSelectMode = !state.cdSelectMode;
     state.cdSelected = new Set();
     document.getElementById('cdSelectToggle').textContent = state.cdSelectMode ? 'Annuler la sélection' : 'Sélectionner plusieurs';
+    document.getElementById('cdSelectAllBtn').style.display = state.cdSelectMode ? '' : 'none';
     document.getElementById('cdBulkActions').style.display = state.cdSelectMode ? 'flex' : 'none';
+    renderCollectionDetailList();
+  }
+  /** Sélectionne tous les livres de la collection ouverte ; ré-appuyer désélectionne tout. */
+  function selectAllInCollectionDetail(){
+    const c = collections.find(x=>x.id===state.cdTargetId);
+    if(!c) return;
+    const validIdx = c.idx.filter(i=>books[i] && books[i].s!=='deleted');
+    const allAlreadySelected = validIdx.length>0 && validIdx.every(i=>state.cdSelected.has(i));
+    if(allAlreadySelected){
+      validIdx.forEach(i=>state.cdSelected.delete(i));
+    } else {
+      validIdx.forEach(i=>state.cdSelected.add(i));
+    }
     renderCollectionDetailList();
   }
   function toggleCdBookSelected(idx){
@@ -4205,6 +4519,7 @@
     state.cdSelectMode = false;
     state.cdSelected = new Set();
     document.getElementById('cdSelectToggle').textContent = 'Sélectionner plusieurs';
+    document.getElementById('cdSelectAllBtn').style.display = 'none';
     document.getElementById('cdBulkActions').style.display = 'none';
     renderCollectionDetailList();
     renderCollections();
@@ -4675,7 +4990,7 @@
   function showApp(){
     document.getElementById('authGate').classList.remove('show');
     document.getElementById('authLoadingScreen').style.display = 'none';
-    goTo('home'); // repart toujours sur un écran connu après une connexion, pour éviter un état bloqué
+    goTo(state.currentScreen); // reste sur l'écran quitté avant un rechargement, ou après une reconnexion
   }
   /** Reprend le prénom/email du compte Supabase tant que la personne n'a pas déjà personnalisé son profil dans l'app. */
   function applySupabaseUserToProfile(user){
@@ -4699,19 +5014,7 @@
     });
   }
 
-  // Se déclenche immédiatement avec la session actuelle (connecté ou non), puis à chaque changement.
-  if(supabaseClient){
-    supabaseClient.auth.onAuthStateChange((_event, session) => {
-      if(session){ applySupabaseUserToProfile(session.user); showApp(); } else { showAuthGateScreen(); }
-    });
-  } else {
-    // Supabase n'a pas pu se charger : on affiche quand même l'écran de connexion, avec un message clair,
-    // plutôt que de laisser l'utilisateur bloqué sur l'écran de chargement indéfiniment.
-    showAuthGateScreen();
-    showAuthGateMessage("Impossible de contacter le service de connexion. Vérifie ta connexion internet et recharge la page.", true);
-  }
-
-  /* ================= Initialisation ================= */
+  /* ================= Initialisation des données locales (avant tout affichage) ================= */
   restoreState();
   applyHomePrefsToDOM();
   renderProfile();
@@ -4723,7 +5026,18 @@
   renderHomeCurrent();
   recomputeStats();
   renderHomeInsights();
-  goTo(state.currentScreen); // reste sur l'écran quitté avant un rechargement, au lieu de revenir à l'accueil
+
+  // Se déclenche immédiatement avec la session actuelle (connecté ou non), puis à chaque changement.
+  if(supabaseClient){
+    supabaseClient.auth.onAuthStateChange((_event, session) => {
+      if(session){ applySupabaseUserToProfile(session.user); showApp(); } else { showAuthGateScreen(); }
+    });
+  } else {
+    // Supabase n'a pas pu se charger : on affiche quand même l'écran de connexion, avec un message clair,
+    // plutôt que de laisser l'utilisateur bloqué sur l'écran de chargement indéfiniment.
+    showAuthGateScreen();
+    showAuthGateMessage("Impossible de contacter le service de connexion. Vérifie ta connexion internet et recharge la page.", true);
+  }
 </script>
 </body>
 </html>
