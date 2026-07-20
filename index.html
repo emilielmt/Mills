@@ -553,6 +553,10 @@
   .chart-bar{ width:100%; border-radius:6px 6px 3px 3px; background:var(--accent-pale); }
   .chart-bar.current{ background:var(--accent-deep); }
   .chart-lbl{ font-size:10px; color:var(--ink-soft); }
+  .chart-tap-caption{ font-size:12.5px; font-weight:600; color:var(--ink-soft); margin:2px 0 10px; min-height:16px; }
+  .chart-bar-wrap{ cursor:pointer; }
+  .chart-bar.selected{ background:var(--accent-deep); }
+  .chart-lbl.selected{ color:var(--accent-deep); font-weight:700; }
 
   .genre-bar{ display:flex; height:14px; border-radius:8px; overflow:hidden; margin-top:8px; }
   .genre-legend{ margin-top:10px; display:flex; flex-direction:column; gap:6px; }
@@ -718,6 +722,16 @@
   }
   .modal-close-x .icon{ width:14px; height:14px; color:var(--ink-soft); }
   .book-detail-rating{ display:flex; align-items:center; justify-content:center; gap:6px; margin:12px 0 4px; }
+  .cont-pages-row{ display:flex; gap:12px; margin-top:18px; }
+  .cont-pages-row .field{ flex:1; min-width:0; }
+  .cont-icon-row{ display:flex; align-items:center; justify-content:center; gap:14px; margin:18px 0 4px; }
+  .cont-icon-btn{
+    width:46px; height:46px; border-radius:50%; background:var(--accent-pale); border:none;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex:0 0 auto;
+  }
+  .cont-icon-btn .icon{ width:19px; height:19px; color:var(--accent-deep); }
+  .cont-icon-btn.danger{ background:#F4DEDA; }
+  .cont-icon-btn.danger .icon{ color:#B4483F; }
   .star-btn{ background:none; border:none; padding:2px; cursor:pointer; }
   .star-btn .icon{ width:22px; height:22px; color:var(--line); fill:none; transition:color .15s ease, fill .15s ease, transform .15s ease; }
   .star-btn.filled .icon{ color:var(--accent-deep); fill:var(--accent-deep); }
@@ -1058,12 +1072,9 @@
         </div>
 
         <div class="section" id="homeChronoBlock">
-          <div class="eyebrow" style="margin-bottom:8px;">Chrono de lecture</div>
+          <div class="eyebrow" style="margin-bottom:2px;">Chrono de lecture</div>
+          <div class="lib-subtitle" id="homeStreakSubtitle" style="margin-bottom:10px;"></div>
           <div id="homeChronoContent"><!-- injecté par JS : renderChrono() --></div>
-        </div>
-
-        <div class="section" id="homeStreakBlock">
-          <div id="homeStreakContent"><!-- injecté par JS : renderStreak() --></div>
         </div>
 
         <div class="section" id="homeGoalsBlock">
@@ -1345,20 +1356,8 @@
               </div>
               <div class="dash-card wide">
                 <div class="dc-label">Livres terminés — 12 derniers mois</div>
-                <div class="chart">
-                  <div class="chart-bar-wrap"><div class="chart-bar" style="height:30%;"></div><span class="chart-lbl">A</span></div>
-                  <div class="chart-bar-wrap"><div class="chart-bar" style="height:50%;"></div><span class="chart-lbl">S</span></div>
-                  <div class="chart-bar-wrap"><div class="chart-bar" style="height:20%;"></div><span class="chart-lbl">O</span></div>
-                  <div class="chart-bar-wrap"><div class="chart-bar" style="height:70%;"></div><span class="chart-lbl">N</span></div>
-                  <div class="chart-bar-wrap"><div class="chart-bar" style="height:40%;"></div><span class="chart-lbl">D</span></div>
-                  <div class="chart-bar-wrap"><div class="chart-bar" style="height:55%;"></div><span class="chart-lbl">J</span></div>
-                  <div class="chart-bar-wrap"><div class="chart-bar" style="height:40%;"></div><span class="chart-lbl">F</span></div>
-                  <div class="chart-bar-wrap"><div class="chart-bar" style="height:60%;"></div><span class="chart-lbl">M</span></div>
-                  <div class="chart-bar-wrap"><div class="chart-bar" style="height:20%;"></div><span class="chart-lbl">A</span></div>
-                  <div class="chart-bar-wrap"><div class="chart-bar" style="height:80%;"></div><span class="chart-lbl">M</span></div>
-                  <div class="chart-bar-wrap"><div class="chart-bar" style="height:40%;"></div><span class="chart-lbl">J</span></div>
-                  <div class="chart-bar-wrap"><div class="chart-bar current" style="height:60%;"></div><span class="chart-lbl">J</span></div>
-                </div>
+                <div class="chart-tap-caption" id="yearChartCaption">Touche un mois pour voir le détail</div>
+                <div class="chart" id="yearChartBars"><!-- injecté par JS : renderYearChart() --></div>
               </div>
             </div>
           </div>
@@ -1470,7 +1469,6 @@
             <div class="accordion-body">
               <div class="settings-list" style="margin-top:0;box-shadow:none;border:1px solid var(--line);">
                 <div class="settings-row"><svg class="icon" viewBox="0 0 24 24"><path d="M6 3.5h9a1 1 0 0 1 1 1V21l-5.5-3.5L5 21V4.5a1 1 0 0 1 1-1Z"/></svg><span class="s-label">Livre en cours</span><label class="toggle"><input type="checkbox" checked id="prefHomeCurrentBlock" onchange="toggleHomeBlock('homeCurrentBlock', this.checked)"/><span class="toggle-track"></span></label></div>
-                <div class="settings-row"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3s-5 5.2-5 9.2A5 5 0 0 0 12 21a5 5 0 0 0 5-8.8c-1 1.5-2 1.8-2 1.8.6-3-1-6-3-11Z"/></svg><span class="s-label">Série de lecture</span><label class="toggle"><input type="checkbox" checked id="prefHomeStreakBlock" onchange="toggleHomeBlock('homeStreakBlock', this.checked)"/><span class="toggle-track"></span></label></div>
                 <div class="settings-row"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg><span class="s-label">Statistiques rapides</span><label class="toggle"><input type="checkbox" checked id="prefHomeStatsBlock" onchange="toggleHomeBlock('homeStatsBlock', this.checked)"/><span class="toggle-track"></span></label></div>
                 <div class="settings-row"><svg class="icon" viewBox="0 0 24 24"><path d="M12 8v5l3 2"/><circle cx="12" cy="13" r="8"/><path d="M9 2h6"/></svg><span class="s-label">Chrono de lecture</span><label class="toggle"><input type="checkbox" checked id="prefHomeChronoBlock" onchange="toggleHomeBlock('homeChronoBlock', this.checked)"/><span class="toggle-track"></span></label></div>
                 <div class="settings-row"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.4"/></svg><span class="s-label">Objectifs</span><label class="toggle"><input type="checkbox" checked id="prefHomeGoalsBlock" onchange="toggleHomeBlock('homeGoalsBlock', this.checked)"/><span class="toggle-track"></span></label></div>
@@ -1716,19 +1714,6 @@
         </div>
 
         <div class="sheet-section">
-          <div class="sheet-section-title">🔍 Filtrer — Statut</div>
-          <div class="chip-wrap" id="menuStatusChips">
-            <button class="chip active" data-v="tous">Tous</button>
-            <button class="chip" data-v="encours">En cours</button>
-            <button class="chip" data-v="pal">PAL</button>
-            <button class="chip" data-v="termine">Terminés</button>
-            <button class="chip" data-v="pause">En pause</button>
-            <button class="chip" data-v="abandonne">Abandonnés</button>
-            <button class="chip" data-v="wishlist">Wishlist</button>
-          </div>
-        </div>
-
-        <div class="sheet-section">
           <div class="sheet-section-title">Genre</div>
           <div class="chip-wrap" id="menuGenreChips">
             <button class="chip" data-v="Fantasy">Fantasy</button>
@@ -1948,44 +1933,36 @@
           <div class="progress-caption" id="contCaption" style="margin-bottom:0;text-align:center;">0 sur 0 pages · 0%</div>
         </div>
 
-        <div class="field" style="margin-top:18px;">
-          <label>Pages lues à ce jour</label>
-          <input type="number" id="contPagesInput" min="0" oninput="updateContinuePreview()" />
+        <div class="cont-pages-row">
+          <div class="field">
+            <label>Nombre de pages lues</label>
+            <input type="number" id="contPagesInput" min="0" oninput="updateContinuePreview()" />
+          </div>
+          <div class="field">
+            <label>Nombre total de pages</label>
+            <input type="number" id="contPageCountInput" min="1" oninput="updateContinuePreview()" />
+          </div>
         </div>
-        <div class="field" style="margin-top:14px;">
-          <label>Nombre total de pages</label>
-          <input type="number" id="contPageCountInput" min="1" oninput="updateContinuePreview()" />
+
+        <div class="cont-icon-row">
+          <button class="cont-icon-btn" onclick="openJournalModal()" title="Journal de lecture">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M6 4h11a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H8a2 2 0 0 1-2-2V4Z"/><path d="M6 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2"/><path d="M9 9h6M9 13h6"/></svg>
+          </button>
+          <button class="cont-icon-btn" onclick="openStatusChangeForCurrentBook()" title="Changer le statut">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v6l4 2"/></svg>
+          </button>
+          <button class="cont-icon-btn" id="contShareIconBtn" onclick="shareBook(state.continueTargetIdx)" title="Partager">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.2 10.6l7.6-4.2M8.2 13.4l7.6 4.2"/></svg>
+          </button>
+          <button class="cont-icon-btn danger" onclick="openDeleteConfirm()" title="Supprimer ce livre">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M10 11v6M14 11v6"/></svg>
+          </button>
         </div>
 
         <div class="modal-actions">
           <button class="btn-ghost" style="flex:1;" onclick="closeOverlay('continueModalOverlay')">Fermer</button>
           <button class="btn-primary" style="flex:1;" onclick="saveContinueProgress()">Enregistrer</button>
         </div>
-
-        <button class="btn-secondary" style="margin-top:10px;" onclick="openJournalModal()">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M6 4h11a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H8a2 2 0 0 1-2-2V4Z"/><path d="M6 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2"/><path d="M9 9h6M9 13h6"/></svg>
-          Ouvrir mon journal de lecture
-        </button>
-
-        <button class="btn-secondary" style="margin-top:10px;" onclick="openStatusChangeForCurrentBook()">
-          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v6l4 2"/></svg>
-          Changer le statut
-        </button>
-
-        <button class="btn-secondary" style="margin-top:10px;" onclick="shareBookGeneral(state.continueTargetIdx)">
-          <svg class="icon" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.2 10.6l7.6-4.2M8.2 13.4l7.6 4.2"/></svg>
-          Partager ce livre
-        </button>
-
-        <button class="btn-secondary" id="contShareProgressBtn" style="margin-top:10px;display:none;" onclick="shareReadingProgressCard(state.continueTargetIdx)">
-          <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 14l2.5-3 2 2L16 9"/></svg>
-          Partager ma progression
-        </button>
-
-        <button class="btn-danger-text" onclick="openDeleteConfirm()">
-          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M10 11v6M14 11v6"/></svg>
-          Supprimer ce livre
-        </button>
       </div>
     </div>
 
@@ -2222,8 +2199,9 @@
     finishTargetIdx:null, continueTargetIdx:null, addConfirmData:null, addConfStatus:'pal', goalDetailKey:null,
     homeGreetingDynamic:true, suggestionBookIdx:null, currentScreen:'home',
     profile:{ firstName:'', lastName:'', displayName:'', email:'', birthdate:'' },
+    ownerUserId:null,
     homeBlockVisibility:{
-      homeCurrentBlock:true, homeStreakBlock:true, homeStatsBlock:true, homeChronoBlock:true,
+      homeCurrentBlock:true, homeStatsBlock:true, homeChronoBlock:true,
       homeGoalsBlock:true, homeFavoriteBlock:true, homeSuggestionBlock:true,
     },
   };
@@ -2297,6 +2275,7 @@
         books, collections, readingActivity, months, customGoals,
         fam: state.fam, mode: state.mode, appearanceMode: state.appearanceMode, currentScreen: state.currentScreen,
         profile: state.profile,
+        ownerUserId: state.ownerUserId,
         homeGreetingDynamic: state.homeGreetingDynamic,
         homeBlockVisibility: state.homeBlockVisibility,
         goals: {
@@ -2323,6 +2302,7 @@
       if(saved.appearanceMode === 'full' || saved.appearanceMode === 'white') state.appearanceMode = saved.appearanceMode;
       if(typeof saved.currentScreen === 'string' && document.getElementById('screen-'+saved.currentScreen)) state.currentScreen = saved.currentScreen;
       if(saved.profile) Object.assign(state.profile, saved.profile);
+      if(typeof saved.ownerUserId === 'string') state.ownerUserId = saved.ownerUserId;
       if(typeof saved.homeGreetingDynamic === 'boolean') state.homeGreetingDynamic = saved.homeGreetingDynamic;
       if(saved.homeBlockVisibility) Object.assign(state.homeBlockVisibility, saved.homeBlockVisibility);
     } catch(err){ console.warn('Données locales illisibles — reprise sur les données de démonstration.', err); }
@@ -2714,23 +2694,12 @@
 
   /* ================= Série de lecture (streak) ================= */
   function renderStreak(){
-    const wrap = document.getElementById('homeStreakContent');
+    const el = document.getElementById('homeStreakSubtitle');
+    if(!el) return;
     const streak = computeStreak();
-
-    if(streak===0){
-      wrap.innerHTML = `<div class="streak-card">
-        <div class="streak-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3s-5 5.2-5 9.2A5 5 0 0 0 12 21a5 5 0 0 0 5-8.8c-1 1.5-2 1.8-2 1.8.6-3-1-6-3-11Z"/></svg></div>
-        <div><div class="streak-num">Pas encore de série</div><div class="streak-msg">Lis quelques pages aujourd'hui pour démarrer ta série de lecture.</div></div>
-      </div>`;
-      return;
-    }
-    const msg = streak===1
-      ? "Premier jour de lecture — continuez comme ça !"
-      : `Tu lis depuis ${streak} jours sans interruption.`;
-    wrap.innerHTML = `<div class="streak-card">
-      <div class="streak-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3s-5 5.2-5 9.2A5 5 0 0 0 12 21a5 5 0 0 0 5-8.8c-1 1.5-2 1.8-2 1.8.6-3-1-6-3-11Z"/></svg></div>
-      <div><div class="streak-num">${streak} jour${streak>1?'s':''} de lecture consécutifs</div><div class="streak-msg">${msg}</div></div>
-    </div>`;
+    el.textContent = streak===0
+      ? "Pas encore de série — lis quelques pages aujourd'hui pour la démarrer."
+      : `${streak} jour${streak>1?'s':''} de lecture consécutifs`;
   }
 
   /* ================= Chrono de lecture ================= */
@@ -2959,7 +2928,6 @@
     document.getElementById('contPagesInput').value = b.pagesRead || 0;
     document.getElementById('contPagesInput').max = b.pageCount;
     document.getElementById('contPageCountInput').value = b.pageCount || '';
-    document.getElementById('contShareProgressBtn').style.display = b.s==='encours' ? '' : 'none';
     renderBookRatingStars(b.note || 0);
     updateContinuePreview();
     openOverlayEl('continueModalOverlay');
@@ -4142,7 +4110,16 @@
     text += `\n\nPartagé depuis Feuillet 📚`;
     return text;
   }
-  async function shareBookGeneral(idx){
+  /** Point d'entrée unique du bouton "Partager" : image de progression si en cours, sinon partage texte classique. */
+  async function shareBook(idx){
+    if(idx==null || !books[idx]) return;
+    if(books[idx].s === 'encours'){
+      await shareReadingProgressCard(idx);
+    } else {
+      await shareBookTextOnly(idx);
+    }
+  }
+  async function shareBookTextOnly(idx){
     if(idx==null || !books[idx]) return;
     const b = books[idx];
     const text = buildBookShareText(b);
@@ -4331,14 +4308,13 @@
   }
   async function shareReadingProgressCard(idx){
     if(idx==null || !books[idx]) return;
-    const btn = document.getElementById('contShareProgressBtn');
-    const originalLabel = btn ? btn.innerHTML : '';
-    if(btn) btn.innerHTML = 'Préparation de l\'image…';
+    const btn = document.getElementById('contShareIconBtn');
+    if(btn){ btn.style.opacity = '.45'; btn.style.pointerEvents = 'none'; }
     try{
       const canvas = await generateProgressCardCanvas(idx);
       if(!canvas) return;
       canvas.toBlob(async (blob)=>{
-        if(btn) btn.innerHTML = originalLabel;
+        if(btn){ btn.style.opacity = ''; btn.style.pointerEvents = ''; }
         if(!blob) return;
         const file = new File([blob], 'feuillet-lecture.png', { type:'image/png' });
         const b = books[idx];
@@ -4357,7 +4333,7 @@
       }, 'image/png', 0.95);
     } catch(err){
       console.warn('Génération de la carte de progression impossible :', err);
-      if(btn) btn.innerHTML = originalLabel;
+      if(btn){ btn.style.opacity = ''; btn.style.pointerEvents = ''; }
     }
   }
 
@@ -4618,10 +4594,6 @@
   }
 
   /* ================= Menu Bibliothèque : filtres complets ================= */
-  document.querySelectorAll('#menuStatusChips .chip').forEach(c=> c.addEventListener('click', ()=>{
-    document.querySelectorAll('#menuStatusChips .chip').forEach(x=>x.classList.remove('active'));
-    c.classList.add('active');
-  }));
   document.querySelectorAll('#menuGenreChips .chip').forEach(c=> c.addEventListener('click', ()=> c.classList.toggle('active') ));
   document.querySelectorAll('#menuSortList .list-select-row').forEach(r=> r.addEventListener('click', ()=>{
     document.querySelectorAll('#menuSortList .list-select-row').forEach(x=>x.classList.remove('active'));
@@ -4649,19 +4621,17 @@
   document.getElementById('openLibMenuBtn').addEventListener('click', ()=>{ renderMenuLists(); openOverlayEl('libMenuOverlay'); });
 
   function applyLibFilters(){
-    state.filters.status = document.querySelector('#menuStatusChips .chip.active')?.dataset.v || 'tous';
     state.filters.genres = [...document.querySelectorAll('#menuGenreChips .chip.active')].map(c=>c.dataset.v);
     state.filters.collection = document.querySelector('#menuCollectionList .list-select-row.active')?.dataset.id || null;
     state.filters.serie = document.querySelector('#menuSerieList .list-select-row.active')?.dataset.id || null;
     state.filters.favOnly = document.getElementById('menuFavRow').classList.contains('active');
     state.filters.sort = document.querySelector('#menuSortList .list-select-row.active')?.dataset.v || 'ajout';
-    document.querySelectorAll('#filterChips .chip').forEach(c=>c.classList.toggle('active', c.dataset.status===state.filters.status));
     renderLibrary();
     closeOverlay('libMenuOverlay');
   }
   function resetLibFilters(){
     state.filters = { status:'tous', genres:[], collection:null, serie:null, favOnly:false, sort:'ajout', view:state.filters.view };
-    document.querySelectorAll('#menuStatusChips .chip').forEach(c=>c.classList.toggle('active', c.dataset.v==='tous'));
+    document.querySelectorAll('#filterChips .chip').forEach(c=>c.classList.toggle('active', c.dataset.status==='tous'));
     document.querySelectorAll('#menuGenreChips .chip').forEach(c=>c.classList.remove('active'));
     document.getElementById('menuFavRow').classList.remove('active');
     document.querySelectorAll('#menuSortList .list-select-row').forEach(r=>r.classList.toggle('active', r.dataset.v==='ajout'));
@@ -4793,10 +4763,54 @@
     setText('dashMonthTimeVal', monthMinutes===null ? '—' : formatMinutes(monthMinutes));
     setText('dashMonthSessionsVal', monthSessions);
     setText('dashYearSessionsVal', yearSessions);
+    renderYearChart();
   }
   function setText(id, value){
     const el = document.getElementById(id);
     if(el) el.textContent = value;
+  }
+  const MONTH_NAMES_FULL_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  const MONTH_LETTER_FR = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+  /** Graphique des livres terminés sur les 12 derniers mois, avec de vraies données et un détail au toucher. */
+  function renderYearChart(){
+    const container = document.getElementById('yearChartBars');
+    if(!container) return;
+    const [ty, tm] = TODAY.split('-').map(Number);
+    const monthsData = [];
+    for(let i=11; i>=0; i--){
+      let y = ty, m = tm - i;
+      while(m <= 0){ m += 12; y -= 1; }
+      const count = books.filter(b=>{
+        if(b.s!=='termine' || !b.fin) return false;
+        const [fy, fm] = b.fin.split('-').map(Number);
+        return fy===y && fm===m;
+      }).length;
+      monthsData.push({ y, m, count, isCurrent: (y===ty && m===tm) });
+    }
+    const maxCount = Math.max(1, ...monthsData.map(d=>d.count));
+    container.innerHTML = monthsData.map((d,i)=>{
+      const heightPct = d.count===0 ? 4 : Math.max(10, Math.round((d.count/maxCount)*100));
+      return `<div class="chart-bar-wrap" onclick="selectYearChartMonth(${i})">
+        <div class="chart-bar ${d.isCurrent?'selected':''}" id="yearBar${i}" style="height:${heightPct}%;"></div>
+        <span class="chart-lbl ${d.isCurrent?'selected':''}" id="yearLbl${i}">${MONTH_LETTER_FR[d.m-1]}</span>
+      </div>`;
+    }).join('');
+    state.yearChartData = monthsData;
+    const currentIdx = monthsData.findIndex(d=>d.isCurrent);
+    if(currentIdx>-1) updateYearChartCaption(currentIdx);
+  }
+  function selectYearChartMonth(i){
+    document.querySelectorAll('#yearChartBars .chart-bar').forEach(b=>b.classList.remove('selected'));
+    document.querySelectorAll('#yearChartBars .chart-lbl').forEach(l=>l.classList.remove('selected'));
+    document.getElementById('yearBar'+i)?.classList.add('selected');
+    document.getElementById('yearLbl'+i)?.classList.add('selected');
+    updateYearChartCaption(i);
+  }
+  function updateYearChartCaption(i){
+    const d = state.yearChartData?.[i];
+    const caption = document.getElementById('yearChartCaption');
+    if(!d || !caption) return;
+    caption.textContent = `${MONTH_NAMES_FULL_FR[d.m-1]} ${d.y} — ${d.count} livre${d.count>1?'s':''} terminé${d.count>1?'s':''}`;
   }
 
   /* ================= Calendrier ================= */
@@ -4993,8 +5007,31 @@
     goTo(state.currentScreen); // reste sur l'écran quitté avant un rechargement, ou après une reconnexion
   }
   /** Reprend le prénom/email du compte Supabase tant que la personne n'a pas déjà personnalisé son profil dans l'app. */
+  /** Vide toutes les données de démonstration — appelé une seule fois, la première fois qu'un compte utilise cet appareil. */
+  function resetLocalDataToEmpty(){
+    books.length = 0;
+    collections = [];
+    readingActivity.length = 0;
+    customGoals.length = 0;
+    state.goals.monthBooksDone = 0;
+    state.goals.yearBooksDone = 0;
+    state.goals.monthPagesDone = 0;
+    state.goals.yearBooksBase = 0;
+    // Le calendrier a toujours besoin d'au moins un mois valide (le mois courant) pour pouvoir s'afficher.
+    const [ty, tm] = TODAY.split('-').map(Number);
+    months.length = 0;
+    months.push({ label:`${MONTH_NAMES_FR[tm-1]} ${ty}`, year:ty, monthNum:tm, startWeekday:computeStartWeekday(ty, tm), days:new Date(ty, tm, 0).getDate(), finished:[] });
+    monthIndex = 0;
+  }
   function applySupabaseUserToProfile(user){
     if(!user) return;
+    if(state.ownerUserId !== user.id){
+      // Première connexion de ce compte sur cet appareil (ou changement de compte) :
+      // on repart d'une bibliothèque vierge plutôt que de garder les livres de démonstration.
+      resetLocalDataToEmpty();
+      state.ownerUserId = user.id;
+      renderLibrary(); renderCollections(); renderCalendar(); renderHomeCurrent(); renderHomeInsights(); recomputeStats();
+    }
     const meta = user.user_metadata || {};
     const inferredFirstName = meta.first_name || meta.given_name || (meta.full_name || meta.name || '').split(' ')[0] || '';
     if(!state.profile.firstName && inferredFirstName) state.profile.firstName = inferredFirstName;
