@@ -5051,19 +5051,7 @@
     });
   }
 
-  /* ================= Initialisation des données locales (avant tout affichage) ================= */
-  restoreState();
-  applyHomePrefsToDOM();
-  renderProfile();
-  renderPaletteGrid();
-  applyTheme();
-  renderCollections();
-  renderLibrary();
-  renderCalendar();
-  renderHomeCurrent();
-  recomputeStats();
-  renderHomeInsights();
-
+  /* ================= Authentification : mise en place AVANT tout rendu, pour ne jamais rester bloqué ================= */
   // Se déclenche immédiatement avec la session actuelle (connecté ou non), puis à chaque changement.
   if(supabaseClient){
     supabaseClient.auth.onAuthStateChange((_event, session) => {
@@ -5074,6 +5062,34 @@
     // plutôt que de laisser l'utilisateur bloqué sur l'écran de chargement indéfiniment.
     showAuthGateScreen();
     showAuthGateMessage("Impossible de contacter le service de connexion. Vérifie ta connexion internet et recharge la page.", true);
+  }
+
+  /* ================= Initialisation des données locales (avant tout affichage) =================
+     Protégée par un filet de sécurité : si une donnée enregistrée localement lors d'une version
+     précédente de l'app est incompatible et fait planter un rendu, on ne doit JAMAIS rester bloqué
+     sur l'écran de chargement — on isole l'erreur, on continue, et on propose une réinitialisation. */
+  try{
+    restoreState();
+    applyHomePrefsToDOM();
+    renderProfile();
+    renderPaletteGrid();
+    applyTheme();
+    renderCollections();
+    renderLibrary();
+    renderCalendar();
+    renderHomeCurrent();
+    recomputeStats();
+    renderHomeInsights();
+  } catch(err){
+    console.error("Erreur au chargement des données locales — l'app continue quand même :", err);
+    try{
+      const msgEl = document.getElementById('authGateMessage');
+      if(msgEl){
+        msgEl.style.display = '';
+        msgEl.classList.add('error');
+        msgEl.innerHTML = "Un problème est survenu au chargement de tes données. Connecte-toi, puis va dans Compte → Paramètres → <b>Réinitialiser mes données</b> si le problème persiste.";
+      }
+    } catch(e2){ /* rien de plus à faire si même ce repli échoue */ }
   }
 </script>
 </body>
