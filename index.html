@@ -755,6 +755,19 @@
   @keyframes celebrate-pop{ 0%{ transform:scale(.4); opacity:0; } 60%{ transform:scale(1.15); opacity:1; } 100%{ transform:scale(1); } }
   .celebrate-title{ font-family:'Playfair Display'; font-size:22px; font-weight:700; }
   .celebrate-cover{ width:84px; height:126px; border-radius:10px; margin:0 auto 10px; box-shadow:0 12px 24px rgba(60,45,25,.24); background-size:cover; }
+  .celebrate-cover-wrap{ position:relative; width:84px; margin:0 auto; }
+  .celebrate-bookmark{
+    position:absolute; top:-16px; right:6px; width:24px; z-index:2; color:var(--accent-deep);
+    transform-origin:top center;
+  }
+  .celebrate-bookmark svg{ width:100%; display:block; fill:currentColor; filter:drop-shadow(0 4px 5px rgba(0,0,0,.28)); }
+  .celebrate-bookmark.drop{ animation: signetBookmarkDrop .75s cubic-bezier(.34,1.56,.64,1) both; }
+  @keyframes signetBookmarkDrop{
+    0%{ transform:translateY(-46px) rotate(-10deg); opacity:0; }
+    55%{ transform:translateY(5px) rotate(4deg); opacity:1; }
+    75%{ transform:translateY(-2px) rotate(-1deg); }
+    100%{ transform:translateY(0) rotate(0deg); opacity:1; }
+  }
   .celebrate-book-title{ font-family:'Playfair Display'; font-weight:600; font-size:15px; }
   .celebrate-recap{ background:var(--accent-pale); border-radius:14px; padding:12px 14px; text-align:left; display:flex; flex-direction:column; gap:6px; }
   .celebrate-recap-row{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink); }
@@ -803,7 +816,7 @@
   .auth-gate.show{ display:flex; }
 
   .auth-gate-hero{
-    position:relative; overflow:hidden; flex:0 0 auto; padding:52px 26px 34px;
+    position:relative; overflow:hidden; flex:0 0 auto; padding:52px 26px 54px;
     display:flex; flex-direction:column; align-items:center; text-align:center;
     background:linear-gradient(160deg, var(--btn-color), var(--btn-color-deep));
   }
@@ -824,7 +837,7 @@
     box-shadow:0 0 0 8px rgba(255,255,255,.08);
     animation:authRibbonIn .6s cubic-bezier(.22,.61,.36,1) both, authRibbonGlow 2.6s ease-in-out .6s infinite;
   }
-  .auth-gate-ribbon svg{ width:30px; height:30px; }
+  .auth-gate-ribbon svg{ width:30px; height:30px; color:#fff; }
   @keyframes authRibbonIn{ from{ opacity:0; transform:scale(.4) rotate(-12deg); } to{ opacity:1; transform:scale(1) rotate(0); } }
   @keyframes authRibbonGlow{ 0%,100%{ box-shadow:0 0 0 8px rgba(255,255,255,.08); } 50%{ box-shadow:0 0 0 14px rgba(255,255,255,.14); } }
   .auth-gate-title{
@@ -852,7 +865,7 @@
 
   /* En-tête coloré réutilisable pour les titres principaux (Bibliothèque, Ajouter, Calendrier, Compte) */
   .page-hero-header{
-    position:relative; overflow:hidden; margin:-4px -20px 18px; padding:18px 20px 26px;
+    position:relative; overflow:hidden; margin:-4px -20px 18px; padding:18px 20px 44px;
     background:linear-gradient(160deg, var(--btn-color), var(--btn-color-deep));
   }
   .page-hero-shape{ position:absolute; border-radius:50%; background:rgba(255,255,255,.12); }
@@ -957,14 +970,12 @@
           <div class="auth-gate-sparkle auth-gate-sparkle-3">✧</div>
 
           <div class="auth-gate-ribbon">
-            <svg viewBox="0 0 48 48" fill="none">
-              <path d="M9 8a2 2 0 0 1 2-2h11v34l-13 4V8Z" fill="rgba(255,255,255,.92)"/>
-              <path d="M26 6h11a2 2 0 0 1 2 2v32l-13-4V6Z" fill="rgba(255,255,255,.7)"/>
-              <path d="M24 6v34" stroke="rgba(255,140,40,.5)" stroke-width="1.5"/>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1Z"/>
             </svg>
           </div>
           <h1 class="auth-gate-title">Feuillet</h1>
-          <p class="auth-gate-tagline">Ta bibliothèque, toujours avec toi.</p>
+          <p class="auth-gate-tagline">Tes lectures, tes souvenirs, tes histoires.</p>
 
           <svg class="auth-gate-wave" viewBox="0 0 400 40" preserveAspectRatio="none">
             <path d="M0 20 Q 100 0 200 18 T 400 16 V40 H0 Z" fill="var(--card)"/>
@@ -1044,7 +1055,7 @@
         </div>
 
         <div class="section" style="margin-top:18px;" id="homeCurrentBlock">
-          <div class="eyebrow" style="margin-bottom:8px;" id="homeCurrentLabel">Lecture en cours</div>
+          <div class="eyebrow" style="margin-bottom:8px;" id="homeCurrentLabel">Ma lecture en cours</div>
           <div id="homeCurrentContent"><!-- injecté par JS : renderHomeCurrent() --></div>
         </div>
 
@@ -1072,7 +1083,7 @@
         </div>
 
         <div class="section" id="homeChronoBlock">
-          <div class="eyebrow" style="margin-bottom:2px;">Chrono de lecture</div>
+          <div class="eyebrow" style="margin-bottom:2px;">Mon chrono</div>
           <div class="lib-subtitle" id="homeStreakSubtitle" style="margin-bottom:10px;"></div>
           <div id="homeChronoContent"><!-- injecté par JS : renderChrono() --></div>
         </div>
@@ -1115,7 +1126,7 @@
         </div>
 
         <div class="section" id="homeFavoriteBlock">
-          <div class="eyebrow" style="margin-bottom:8px;">Coup de cœur du moment</div>
+          <div class="eyebrow" style="margin-bottom:8px;">Mes coups de cœur</div>
           <div id="homeFavoriteContent"><!-- injecté par JS : renderFavoriteHighlight() --></div>
         </div>
 
@@ -2143,7 +2154,12 @@
         <div class="celebrate-emoji">🎉</div>
         <div class="celebrate-title">Bravo !</div>
         <p class="subtle" style="margin:2px 0 14px;">Tu as terminé</p>
-        <div class="celebrate-cover" id="celebrateCover"></div>
+        <div class="celebrate-cover-wrap">
+          <div class="celebrate-bookmark" id="celebrateBookmark">
+            <svg viewBox="0 0 24 32"><path d="M2 2h20v28l-10-8-10 8V2Z"/></svg>
+          </div>
+          <div class="celebrate-cover" id="celebrateCover"></div>
+        </div>
         <div class="celebrate-book-title" id="celebrateTitle">—</div>
         <div class="subtle" id="celebrateAuthor" style="margin-bottom:14px;">—</div>
         <div class="celebrate-recap" id="celebrateRecap"><!-- injecté par JS --></div>
@@ -2637,16 +2653,16 @@
     const content = document.getElementById('homeCurrentContent');
 
     if(current.length===0){
-      label.textContent = 'Lecture en cours';
+      label.textContent = 'Ma lecture en cours';
       content.innerHTML = `<div class="card" style="padding:10px 8px 22px;">
-        ${emptyState('<path d="M6 4h11a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H8a2 2 0 0 1-2-2V4Z"/><path d="M6 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2"/>', "Un livre t'attend", 'Aucune lecture en cours pour le moment — et si tu en commençais une ?')}
-        <button class="btn-primary" style="width:calc(100% - 24px);margin:4px auto 0;display:flex;" onclick="goTo('library')">Choisir un livre dans ma PAL</button>
+        ${emptyState('<path d="M6 4h11a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H8a2 2 0 0 1-2-2V4Z"/><path d="M6 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2"/>', "Un livre t'attend", "dans ta PAL… Il ne reste plus qu'à l'ouvrir !")}
+        <button class="btn-primary" style="width:calc(100% - 24px);margin:4px auto 0;display:flex;" onclick="goTo('library')">Ajouter un livre</button>
       </div>`;
       return;
     }
 
     if(current.length===1){
-      label.textContent = 'Lecture en cours';
+      label.textContent = 'Ma lecture en cours';
       const b = current[0];
       const pct = Math.round((b.pagesRead/(b.pageCount||1))*100) || 0;
       content.innerHTML = `
@@ -2674,7 +2690,7 @@
     }
 
     // Plusieurs lectures en cours : grille de carrés, 2 par colonne
-    label.textContent = `Lecture en cours (${current.length})`;
+    label.textContent = `Ma lecture en cours (${current.length})`;
     content.innerHTML = `<div class="current-grid">
       ${current.map(b=>{
         const pct = Math.round((b.pagesRead/(b.pageCount||1))*100) || 0;
@@ -2698,7 +2714,7 @@
     if(!el) return;
     const streak = computeStreak();
     el.textContent = streak===0
-      ? "Pas encore de série — lis quelques pages aujourd'hui pour la démarrer."
+      ? "Lis quelques pages aujourd'hui et lance le chrono !"
       : `${streak} jour${streak>1?'s':''} de lecture consécutifs`;
   }
 
@@ -2712,8 +2728,7 @@
         <div class="chrono-idle-row">
           <div class="chrono-idle-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 8v5l3 2"/><circle cx="12" cy="13" r="8"/><path d="M9 2h6"/></svg></div>
           <div class="chrono-idle-text">
-            <div class="chrono-idle-title">Démarrer une session</div>
-            <div class="chrono-idle-sub">Suis ton temps de lecture en direct.</div>
+            <div class="chrono-idle-title" style="font-weight:700;">Démarrer une session</div>
           </div>
           <button class="chrono-idle-btn" onclick="startReadingTimer()" title="Démarrer">
             <svg class="icon" viewBox="0 0 24 24"><path d="M7 5l12 7-12 7V5Z"/></svg>
@@ -4193,115 +4208,147 @@
     lines.forEach((l,i)=> ctx.fillText(l, x, y + i*lineHeight));
     return lines.length;
   }
+  /** Même logique d'habillage que wrapCanvasText, mais ne fait que compter les lignes (aucun dessin) — sert à calculer une mise en page à l'avance. */
+  function countWrappedLines(ctx, text, maxWidth, maxLines){
+    const words = text.split(' ');
+    let line = '', count = 0;
+    for(const word of words){
+      const test = line ? line+' '+word : word;
+      if(ctx.measureText(test).width > maxWidth && line){ count++; line = word; }
+      else line = test;
+    }
+    if(line) count++;
+    return maxLines ? Math.min(count, maxLines) : count;
+  }
   async function generateProgressCardCanvas(idx){
     const b = books[idx];
     if(!b) return null;
     try{
       await Promise.all([
-        document.fonts.load("700 44px 'Playfair Display'"),
-        document.fonts.load("600 26px 'Inter'"),
+        document.fonts.load("700 46px 'Playfair Display'"),
+        document.fonts.load("700 22px 'Playfair Display'"),
+        document.fonts.load("600 24px 'Inter'"),
         document.fonts.load("700 30px 'Inter'"),
+        document.fonts.load("700 24px 'Inter'"),
       ]);
     } catch(e){ /* si les polices tardent, on dessine quand même avec la police par défaut */ }
 
     const accentDeep = getComputedStyle(document.getElementById('phone')).getPropertyValue('--btn-color-deep').trim() || '#C97A2E';
     const accent = getComputedStyle(document.getElementById('phone')).getPropertyValue('--btn-color').trim() || '#EFA85F';
 
-    const W = 1000, H = 1120;
+    // Prépare la couverture (vraie image si possible, sinon un dégradé de secours avec le titre dessus).
+    let coverSource = null;
+    if(b.coverUrl){
+      try{ coverSource = await loadImageSafe(b.coverUrl); } catch(e){ coverSource = null; }
+    }
+    if(!coverSource){
+      const fallback = document.createElement('canvas');
+      fallback.width = 600; fallback.height = 900;
+      const fctx = fallback.getContext('2d');
+      const fg = fctx.createLinearGradient(0, 0, 600, 900);
+      fg.addColorStop(0, accent); fg.addColorStop(1, accentDeep);
+      fctx.fillStyle = fg; fctx.fillRect(0, 0, 600, 900);
+      fctx.fillStyle = 'rgba(255,255,255,.95)';
+      fctx.font = "700 44px 'Playfair Display'";
+      fctx.textAlign = 'center';
+      wrapCanvasText(fctx, b.t, 300, 430, 500, 54, 5);
+      coverSource = fallback;
+    }
+
+    const W = 1200, H = 520;
     const canvas = document.createElement('canvas');
     canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext('2d');
 
-    // Fond dégradé dans la couleur du thème actif
-    const bgGrad = ctx.createLinearGradient(0, 0, W, H);
-    bgGrad.addColorStop(0, accent);
-    bgGrad.addColorStop(1, accentDeep);
-    ctx.fillStyle = bgGrad;
+    // --- Fond : la couverture du livre, floutée et assombrie par un filtre, en plein cadre ---
+    ctx.save();
+    ctx.filter = 'blur(18px) brightness(0.9)';
+    const bgScale = Math.max(W/coverSource.width, H/coverSource.height) * 1.15;
+    const bgW = coverSource.width*bgScale, bgH = coverSource.height*bgScale;
+    ctx.drawImage(coverSource, (W-bgW)/2, (H-bgH)/2, bgW, bgH);
+    ctx.restore();
+    ctx.fillStyle = 'rgba(20,16,12,.55)';
     ctx.fillRect(0, 0, W, H);
 
-    // Formes décoratives
-    ctx.fillStyle = 'rgba(255,255,255,.10)';
-    ctx.beginPath(); ctx.arc(W-90, 140, 240, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,.07)';
-    ctx.beginPath(); ctx.arc(70, H-180, 180, 0, Math.PI*2); ctx.fill();
+    // --- Couverture nette, à gauche, avec une ombre portée ---
+    const coverW = 260, coverH = 390, coverX = 60, coverY = (H-coverH)/2;
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 14;
+    roundRectPath(ctx, coverX, coverY, coverW, coverH, 14);
+    ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.restore();
+    ctx.save();
+    roundRectPath(ctx, coverX, coverY, coverW, coverH, 14);
+    ctx.clip();
+    ctx.drawImage(coverSource, coverX, coverY, coverW, coverH);
+    ctx.restore();
 
-    // En-tête "Feuillet"
-    ctx.fillStyle = '#fff';
-    ctx.font = "700 40px 'Playfair Display'";
-    ctx.textAlign = 'center';
-    ctx.fillText('Feuillet', W/2, 110);
-    ctx.font = "600 22px 'Inter'";
-    ctx.fillStyle = 'rgba(255,255,255,.85)';
-    ctx.fillText('Ma lecture en cours', W/2, 148);
+    // --- Zone de texte, à droite, centrée verticalement par rapport à la couverture ---
+    const textX = coverX + coverW + 55;
+    const textMaxW = W - textX - 60;
+    const pct = b.p || Math.round((b.pagesRead/(b.pageCount||1))*100) || 0;
+
+    ctx.textBaseline = 'top';
     ctx.textAlign = 'left';
 
-    // Carte blanche centrale
-    const cardX = 70, cardY = 230, cardW = W-140, cardH = 820;
-    ctx.fillStyle = 'rgba(255,255,255,.98)';
-    roundRectPath(ctx, cardX, cardY, cardW, cardH, 36);
-    ctx.fill();
+    // Espacements et hauteurs de chaque élément (ajustables ici en un seul endroit).
+    const TITLE_LINE_H = 54, GAP_TITLE_AUTHOR = 6, AUTHOR_H = 30, GAP_AUTHOR_BADGE = 40,
+          BADGE_H = 46, GAP_BADGE_BAR = 22, BAR_H = 14, GAP_BAR_PCT = 20, PCT_H = 36;
 
-    // Couverture du livre
-    const coverW = 300, coverH = 450, coverX = cardX + (cardW-coverW)/2, coverY = cardY + 60;
-    let coverDrawn = false;
-    if(b.coverUrl){
-      try{
-        const img = await loadImageSafe(b.coverUrl);
-        ctx.save();
-        roundRectPath(ctx, coverX, coverY, coverW, coverH, 18);
-        ctx.clip();
-        ctx.drawImage(img, coverX, coverY, coverW, coverH);
-        ctx.restore();
-        coverDrawn = true;
-      } catch(e){ /* on retombe sur la couverture de secours ci-dessous */ }
-    }
-    if(!coverDrawn){
-      const coverGrad = ctx.createLinearGradient(coverX, coverY, coverX+coverW, coverY+coverH);
-      coverGrad.addColorStop(0, accent);
-      coverGrad.addColorStop(1, accentDeep);
-      ctx.save();
-      roundRectPath(ctx, coverX, coverY, coverW, coverH, 18);
-      ctx.clip();
-      ctx.fillStyle = coverGrad;
-      ctx.fillRect(coverX, coverY, coverW, coverH);
-      ctx.fillStyle = 'rgba(255,255,255,.95)';
-      ctx.font = "700 30px 'Playfair Display'";
-      ctx.textAlign = 'center';
-      wrapCanvasText(ctx, b.t, coverX+coverW/2, coverY+coverH/2, coverW-50, 38, 4);
-      ctx.textAlign = 'left';
-      ctx.restore();
-    }
-    ctx.shadowColor = 'rgba(0,0,0,.15)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 12;
-    ctx.strokeStyle = 'rgba(0,0,0,0)'; ctx.stroke();
-    ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+    // 1. Mesurer le titre au préalable (sans dessiner) pour calculer la hauteur totale du bloc.
+    ctx.font = "700 46px 'Playfair Display'";
+    const titleLines = countWrappedLines(ctx, b.t, textMaxW, 2);
 
-    // Titre + auteur
-    const textY = coverY + coverH + 70;
-    ctx.fillStyle = '#2E2A22';
-    ctx.font = "700 42px 'Playfair Display'";
-    ctx.textAlign = 'center';
-    const titleLines = wrapCanvasText(ctx, b.t, W/2, textY, cardW-100, 50, 2);
-    ctx.font = "500 26px 'Inter'";
-    ctx.fillStyle = '#8A8375';
-    ctx.fillText(b.a, W/2, textY + titleLines*50 + 10);
+    const blockH = titleLines*TITLE_LINE_H + GAP_TITLE_AUTHOR + AUTHOR_H + GAP_AUTHOR_BADGE
+                 + BADGE_H + GAP_BADGE_BAR + BAR_H + GAP_BAR_PCT + PCT_H;
+    let cursorY = coverY + (coverH - blockH) / 2;
 
-    // Barre de progression
-    const pct = b.p || Math.round((b.pagesRead/(b.pageCount||1))*100) || 0;
-    const barY = textY + titleLines*50 + 60, barW = cardW-160, barX = cardX+80, barH = 22;
-    ctx.fillStyle = '#F0E6D8';
-    roundRectPath(ctx, barX, barY, barW, barH, 11);
+    // 2. Titre
+    ctx.fillStyle = '#fff';
+    ctx.font = "700 46px 'Playfair Display'";
+    wrapCanvasText(ctx, b.t, textX, cursorY, textMaxW, TITLE_LINE_H, 2);
+    cursorY += titleLines*TITLE_LINE_H + GAP_TITLE_AUTHOR;
+
+    // 3. Auteur
+    ctx.font = "500 24px 'Inter'";
+    ctx.fillStyle = 'rgba(255,255,255,.82)';
+    ctx.fillText(b.a, textX, cursorY);
+    cursorY += AUTHOR_H + GAP_AUTHOR_BADGE;
+
+    // 4. Label "Progression", dans un petit rectangle blanc pour le démarquer
+    ctx.font = "700 26px 'Inter'";
+    const labelText = 'Progression';
+    const labelPadX = 18;
+    const labelTextW = ctx.measureText(labelText).width;
+    ctx.fillStyle = '#fff';
+    roundRectPath(ctx, textX, cursorY, labelTextW + labelPadX*2, BADGE_H, BADGE_H/2);
     ctx.fill();
     ctx.fillStyle = accentDeep;
-    roundRectPath(ctx, barX, barY, Math.max(barW*(pct/100), barH), barH, 11);
-    ctx.fill();
+    ctx.fillText(labelText, textX + labelPadX, cursorY + (BADGE_H-26)/2);
+    cursorY += BADGE_H + GAP_BADGE_BAR;
 
-    ctx.font = "700 34px 'Inter'";
-    ctx.fillStyle = '#2E2A22';
-    ctx.textAlign = 'center';
-    ctx.fillText(`${pct}%`, W/2, barY + 75);
-    ctx.font = "500 22px 'Inter'";
-    ctx.fillStyle = '#8A8375';
-    if(b.pageCount) ctx.fillText(`${b.pagesRead || 0} sur ${b.pageCount} pages`, W/2, barY + 108);
+    // 5. Barre de progression
+    const barW = textMaxW * 0.62;
+    ctx.fillStyle = 'rgba(255,255,255,.25)';
+    roundRectPath(ctx, textX, cursorY, barW, BAR_H, 7);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    roundRectPath(ctx, textX, cursorY, Math.max(barW*(pct/100), BAR_H), BAR_H, 7);
+    ctx.fill();
+    cursorY += BAR_H + GAP_BAR_PCT;
+
+    // 6. Pourcentage
+    ctx.font = "700 30px 'Inter'";
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`${pct}%`, textX, cursorY);
+
+    ctx.textBaseline = 'alphabetic'; // remis par défaut pour la suite du dessin
+
+    // --- Petite marque "Feuillet", discrète en haut à droite ---
+    ctx.font = "700 22px 'Playfair Display'";
+    ctx.fillStyle = 'rgba(255,255,255,.75)';
+    ctx.textAlign = 'right';
+    ctx.fillText('Feuillet', W-40, 50);
     ctx.textAlign = 'left';
 
     return canvas;
@@ -4685,6 +4732,12 @@
       <div class="celebrate-recap-row"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.4"/></svg>Objectifs mis à jour</div>
       <div class="celebrate-recap-row"><svg class="icon" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17"/></svg>Ajouté au calendrier du ${dateToFr(b.fin)}</div>
     `;
+    // Rejoue l'animation du marque-page à chaque fois (pas seulement au premier affichage) :
+    // on retire puis on remet la classe pour forcer le navigateur à relancer l'animation CSS.
+    const bookmark = document.getElementById('celebrateBookmark');
+    bookmark.classList.remove('drop');
+    void bookmark.offsetWidth; // force un reflow entre les deux
+    bookmark.classList.add('drop');
     openOverlayEl('celebrateModalOverlay');
   }
   function dateToFr(iso){
