@@ -2311,6 +2311,10 @@
       if(Array.isArray(saved.collections)) collections.splice(0, collections.length, ...saved.collections);
       if(Array.isArray(saved.readingActivity) && saved.readingActivity.length) readingActivity.splice(0, readingActivity.length, ...saved.readingActivity);
       if(Array.isArray(saved.months) && saved.months.length) months.splice(0, months.length, ...saved.months);
+      // monthIndex pointait par défaut sur le 2e mois de démonstration (index 1) : avec les vraies données
+      // d'un compte, le tableau "months" peut être plus court, ce qui faisait planter le calendrier. On le
+      // ramène toujours sur le dernier mois valide (le plus récent) après restauration.
+      monthIndex = Math.max(0, Math.min(monthIndex, months.length - 1));
       if(Array.isArray(saved.customGoals)) customGoals.splice(0, customGoals.length, ...saved.customGoals);
       if(saved.goals) Object.assign(state.goals, saved.goals);
       if(typeof saved.fam === 'string') state.fam = saved.fam;
@@ -3100,7 +3104,7 @@
   }
   function confirmDeleteBook(){
     const idx = state.continueTargetIdx;
-    if(idx==null) return;
+    if(idx==null || !books[idx]) return;
     // Suppression "douce" : on ne retire pas l'entrée du tableau (les collections et
     // le mode sélection référencent des livres par index), on la marque comme
     // supprimée et on l'exclut partout ailleurs (bibliothèque, collections, stats).
@@ -4420,7 +4424,7 @@
 
   /* ================= Collections & séries ================= */
   function computeStats(col){
-    const validIdx = col.idx.filter(i=>books[i].s!=='deleted');
+    const validIdx = col.idx.filter(i=>books[i] && books[i].s!=='deleted');
     const total = validIdx.length;
     const read = validIdx.filter(i=>books[i].s==='termine').length;
     const pct = total ? Math.round(read/total*100) : 0;
@@ -4874,6 +4878,10 @@
   ];
   let monthIndex = 1;
   function renderCalendar(){
+    // Filet de sécurité : si monthIndex pointe hors du tableau (données restaurées plus courtes que prévu),
+    // on se recale sur le dernier mois valide plutôt que de planter tout l'affichage de l'accueil.
+    if(!months[monthIndex]) monthIndex = Math.max(0, months.length - 1);
+    if(!months[monthIndex]) return; // aucun mois disponible du tout : rien à afficher, mais on ne plante pas
     const m = months[monthIndex];
     // Filtrage défensif : un livre supprimé (depuis la bibliothèque, la fiche, ou le calendrier
     // lui-même) ne doit plus jamais apparaître ici, quel que soit l'endroit d'où vient la suppression.
