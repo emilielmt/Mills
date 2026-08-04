@@ -291,7 +291,12 @@
   .stat-label{ font-size:10.5px; color:var(--ink-soft); margin-top:5px; }
 
   /* Objectifs : carte unique, aérée, avec icône par objectif */
-  .goals-unified-card{ background:var(--card); border-radius:var(--radius-lg); box-shadow:var(--shadow); padding:22px 18px; }
+  .goals-unified-card{ background:var(--accent-pale); border-radius:var(--radius-lg); padding:22px 18px; }
+  .add-goal-btn{
+    width:26px; height:26px; border-radius:50%; background:var(--accent-deep); border:none;
+    display:flex; align-items:center; justify-content:center; flex:0 0 auto; cursor:pointer;
+  }
+  .add-goal-btn .icon{ width:14px; height:14px; color:#fff; stroke-width:2.4; }
   .goals-rings-row{ display:flex; justify-content:space-between; gap:8px; }
   .goal-ring-item{
     background:none; border:none; flex:1; display:flex; flex-direction:column; align-items:center; text-align:center;
@@ -304,7 +309,7 @@
     display:flex; align-items:center; justify-content:center;
     transition:background .5s cubic-bezier(.22,.61,.36,1);
   }
-  .goal-ring-inner{ width:50px; height:50px; border-radius:50%; background:var(--card); display:flex; align-items:center; justify-content:center; }
+  .goal-ring-inner{ width:50px; height:50px; border-radius:50%; background:var(--accent-pale); display:flex; align-items:center; justify-content:center; }
   .goal-ring-pct{ font-family:'Playfair Display'; font-weight:700; font-size:13px; color:var(--ink); }
   .goal-ring-label{ font-size:12px; font-weight:600; color:var(--ink); transition:color .2s ease; }
   .goal-ring-item.active .goal-ring-label{ color:var(--accent-deep); }
@@ -1095,7 +1100,12 @@
         <div class="section" id="homeGoalsBlock">
           <div class="section-head">
             <div class="eyebrow" style="margin:0;">Mes objectifs</div>
-            <button class="link-btn" onclick="goTo('account')">Voir tout</button>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <button class="link-btn" onclick="goTo('account')">Voir tout</button>
+              <button class="add-goal-btn" onclick="openCreateGoalModal()" title="Ajouter un objectif">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+            </div>
           </div>
 
           <div class="goals-unified-card">
@@ -1119,13 +1129,9 @@
 
             <div class="goal-detail" id="goalDetailPanel"></div>
 
-            <div class="goals-card-divider"></div>
+            <div class="goals-card-divider" id="goalsCardDivider" style="display:none;"></div>
 
             <div class="custom-goals-list" id="customGoalsList"><!-- injecté par JS : renderCustomGoals() --></div>
-            <button class="add-goal-row" onclick="openCreateGoalModal()">
-              <span class="add-goal-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
-              Ajouter un objectif
-            </button>
           </div>
         </div>
 
@@ -2598,6 +2604,8 @@
     const accountList = document.getElementById('customGoalsListAccount');
     if(homeList) homeList.innerHTML = html;
     if(accountList) accountList.innerHTML = html;
+    const divider = document.getElementById('goalsCardDivider');
+    if(divider) divider.style.display = customGoals.length ? '' : 'none';
   }
   function toggleCustomGoalDone(id){
     const g = customGoals.find(x=>x.id===id);
@@ -3778,9 +3786,13 @@
       // start() une deuxième fois sur la même instance juste après provoquait une erreur interne de la
       // librairie ("Cannot transition to a new state, already under transition"). La plupart des caméras
       // de smartphone font de toute façon la mise au point automatiquement, même sans cette contrainte.
+      // Zone de scan large et basse : un code-barres de livre (EAN-13) est bien plus large que haut,
+      // contrairement à un QR code. Une zone carrée le laissait souvent déborder ou mal cadré.
+      // On retire aussi la contrainte de ratio caméra (16:9) : certains téléphones lui faisaient
+      // choisir un mode caméra moins net, ce qui gênait la lecture du code plus qu'autre chose.
       await qrScanner.start(
         { facingMode: 'environment' },
-        { fps:10, qrbox:{ width:250, height:160 }, aspectRatio: 1.7777 },
+        { fps:12, qrbox:{ width:280, height:130 } },
         onScanDecoded,
         () => {}
       );
