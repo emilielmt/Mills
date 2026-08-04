@@ -361,13 +361,6 @@
   .save-mini{ background:var(--accent-deep); color:#fff; border:none; border-radius:16px; padding:7px 14px; font-size:12.5px; font-weight:600; cursor:pointer; font-family:'Inter'; }
 
   .bottomnav{ position:absolute; left:14px; right:14px; bottom:16px; background:var(--card); border-radius:var(--radius-pill); box-shadow:0 14px 32px rgba(50,40,25,0.14); display:flex; align-items:center; justify-content:space-between; padding:10px 14px; z-index:20; }
-  /* Mode "calendrier seul" : ouvert dans un nouvel onglet pour capture d'écran, sans le reste de l'app. */
-  body.calendar-print-mode .statusbar,
-  body.calendar-print-mode .bottomnav,
-  body.calendar-print-mode .page-hero-header,
-  body.calendar-print-mode .screen:not(#screen-calendar){ display:none !important; }
-  body.calendar-print-mode .screens{ padding-top:0; }
-  body.calendar-print-mode #screen-calendar{ padding-top:24px; }
   .nav-btn{ background:none; border:none; flex:1; display:flex; align-items:center; justify-content:center; color:var(--ink-faint); cursor:pointer; padding:2px; transition:color .2s ease; }
   .nav-icon-wrap{ width:42px; height:42px; border-radius:var(--radius-pill); display:flex; align-items:center; justify-content:center; transition:background .25s cubic-bezier(.22,.61,.36,1); }
   .nav-icon-wrap .icon{ width:22px; height:22px; }
@@ -1064,7 +1057,7 @@
         </div>
 
         <div class="section" style="margin-top:18px;" id="homeCurrentBlock">
-          <div class="eyebrow" style="margin-bottom:8px;" id="homeCurrentLabel">Ma lecture en cours</div>
+          <div class="eyebrow" style="margin-bottom:8px;" id="homeCurrentLabel">Mon livre en cours</div>
           <div id="homeCurrentContent"><!-- injecté par JS : renderHomeCurrent() --></div>
         </div>
 
@@ -1092,7 +1085,7 @@
         </div>
 
         <div class="section" id="homeChronoBlock">
-          <div class="eyebrow" style="margin-bottom:2px;">Mon chrono</div>
+          <div class="eyebrow" style="margin-bottom:2px;">Chrono lecture</div>
           <div class="lib-subtitle" id="homeStreakSubtitle" style="margin-bottom:10px;"></div>
           <div id="homeChronoContent"><!-- injecté par JS : renderChrono() --></div>
         </div>
@@ -1246,7 +1239,7 @@
         <div class="section">
           <div class="eyebrow" id="searchResultsLabel">Résultats</div>
           <div id="searchResultsContainer">
-            <p class="hint">Tape un titre, un nom d'auteur ou un ISBN pour lancer la recherche — Google Books et Open Library sont interrogés automatiquement.</p>
+            <p class="hint">Tape un titre, un nom d'auteur ou un ISBN pour lancer la recherche.</p>
           </div>
         </div>
         <div class="bottom-space"></div>
@@ -1256,15 +1249,8 @@
       <section class="screen" id="screen-calendar">
         <div class="page-hero-header">
           <div class="page-hero-shape page-hero-shape-1"></div>
-          <div class="page-hero-row">
-            <div>
-              <div class="page-hero-eyebrow">Suivi chronologique</div>
-              <h1 class="page-hero-title">Calendrier</h1>
-            </div>
-            <button class="circle-btn page-hero-btn" onclick="openCalendarPrintTab()" title="Ouvrir le calendrier seul dans un nouvel onglet">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/></svg>
-            </button>
-          </div>
+          <div class="page-hero-eyebrow">Suivi chronologique</div>
+          <h1 class="page-hero-title">Calendrier</h1>
           <svg class="page-hero-wave" viewBox="0 0 400 22" preserveAspectRatio="none"><path d="M0 11 Q100 -2 200 9 T400 8 V22 H0 Z" fill="var(--bg)"/></svg>
         </div>
 
@@ -1280,7 +1266,7 @@
         </div>
 
         <div class="finished-list">
-          <div class="eyebrow">Terminés ce mois-ci</div>
+          <div class="eyebrow">Livres terminés ce mois-ci</div>
           <div id="finishedList"></div>
         </div>
         <div class="bottom-space"></div>
@@ -1321,7 +1307,7 @@
               <div class="dash-card"><div class="dc-label">Pages lues</div><div class="dc-val" id="dashTodayPagesVal">0</div></div>
               <div class="dash-card"><div class="dc-label">Livres ouverts</div><div class="dc-val">2</div></div>
               <div class="dash-card">
-                <div class="dc-label">Série (streak)</div>
+                <div class="dc-label">Série</div>
                 <div class="dc-val" style="display:flex;align-items:center;gap:5px;"><span id="dashTodayStreakVal">0</span> <svg class="icon icon-sm" style="color:var(--accent-deep);" viewBox="0 0 24 24"><path d="M12 3s-5 5.2-5 9.2A5 5 0 0 0 12 21a5 5 0 0 0 5-8.8c-1 1.5-2 1.8-2 1.8.6-3-1-6-3-11Z"/></svg></div>
               </div>
               <div class="dash-card wide">
@@ -2675,7 +2661,7 @@
     const content = document.getElementById('homeCurrentContent');
 
     if(current.length===0){
-      label.textContent = 'Ma lecture en cours';
+      label.textContent = 'Mon livre en cours';
       content.innerHTML = `<div class="card" style="padding:10px 8px 22px;">
         ${emptyState('<path d="M6 4h11a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H8a2 2 0 0 1-2-2V4Z"/><path d="M6 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2"/>', "Un livre t'attend", "dans ta PAL… Il ne reste plus qu'à l'ouvrir !")}
         <button class="btn-primary" style="width:calc(100% - 24px);margin:4px auto 0;display:flex;" onclick="goTo('library')">Ajouter un livre</button>
@@ -2684,7 +2670,7 @@
     }
 
     if(current.length===1){
-      label.textContent = 'Ma lecture en cours';
+      label.textContent = 'Mon livre en cours';
       const b = current[0];
       const pct = Math.round((b.pagesRead/(b.pageCount||1))*100) || 0;
       content.innerHTML = `
@@ -2712,7 +2698,7 @@
     }
 
     // Plusieurs lectures en cours : grille de carrés, 2 par colonne
-    label.textContent = `Ma lecture en cours (${current.length})`;
+    label.textContent = `Mon livre en cours (${current.length})`;
     content.innerHTML = `<div class="current-grid">
       ${current.map(b=>{
         const pct = Math.round((b.pagesRead/(b.pageCount||1))*100) || 0;
@@ -3191,7 +3177,7 @@
     const b = books[idx];
     const wrap = document.getElementById('journalEntries');
     if(!b.journal || b.journal.length===0){
-      wrap.innerHTML = emptyState('<path d="M6 4h11a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H8a2 2 0 0 1-2-2V4Z"/><path d="M6 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2"/>', 'Page blanche', 'Aucune note pour l\'instant — écrivez la première.');
+      wrap.innerHTML = emptyState('<path d="M6 4h11a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H8a2 2 0 0 1-2-2V4Z"/><path d="M6 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2"/>', 'Page blanche', 'Aucune note pour l\'instant.');
       return;
     }
     wrap.innerHTML = [...b.journal].reverse().map(entry => `
@@ -3471,9 +3457,24 @@
     if(r.error) googleDetail = r.error;
     let results = r.results;
 
-    if(results.length === 0){
-      r = await searchOpenLibraryISBN(isbn);
-      results = r.results;
+    // Si Google Books ne trouve rien, OU trouve une fiche incomplète (pas de couverture ou pas de
+    // nombre de pages), on interroge aussi Open Library — pour compléter, pas juste en dernier recours.
+    const needsCompletion = results.length === 0 || !results[0].coverUrl || !results[0].pageCount;
+    if(needsCompletion){
+      const ol = await searchOpenLibraryISBN(isbn);
+      if(results.length === 0){
+        results = ol.results;
+      } else if(ol.results.length > 0){
+        const g = results[0], o = ol.results[0];
+        results[0] = {
+          ...g,
+          coverUrl: g.coverUrl || o.coverUrl,
+          pageCount: g.pageCount || o.pageCount,
+          genre: g.genre || o.genre,
+          publishedDate: g.publishedDate || o.publishedDate,
+          publisher: g.publisher || o.publisher,
+        };
+      }
     }
 
     const final = rankAndDedupe(results);
@@ -3503,7 +3504,7 @@
       searchRequestId++; // invalide toute requête déjà en vol
       document.getElementById('searchResultsLabel').textContent = 'Résultats';
       document.getElementById('searchResultsContainer').innerHTML =
-        '<p class="hint">Tape un titre, un nom d\'auteur ou un ISBN pour lancer la recherche — Google Books et Open Library sont interrogés automatiquement.</p>';
+        '<p class="hint">Tape un titre, un nom d\'auteur ou un ISBN pour lancer la recherche.</p>';
       return;
     }
     searchDebounceTimer = setTimeout(()=>runBookSearch(query), 450);
@@ -4863,11 +4864,28 @@
       else grid.innerHTML += `<div class="cal-day"><span class="daynum">${d}</span></div>`;
     }
     const list = document.getElementById('finishedList');
-    list.innerHTML = (validFinished.length ? validFinished : []).sort((a,b)=>a.day-b.day).map(f=>`
-      <div class="finished-row" onclick="openBookDetail(${f.idx})" style="cursor:pointer;">
-        <div ${coverAttrs({cv:f.cv, coverUrl:f.coverUrl, t:f.t})} style="width:38px;height:56px;">${coverPhotoTag({cv:f.cv, coverUrl:f.coverUrl, t:f.t})}</div>
-        <div><div class="f-title">${escapeHtml(f.t)}</div><div class="f-date">${escapeHtml(f.a)} · terminé le ${f.day} ${label.split(' ')[0].toLowerCase()}</div></div>
-      </div>`).join('') || emptyState('<path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="8.5"/>', 'Un mois tranquille', "Aucun livre terminé sur cette période — ce n'est que partie remise.");
+    if(validFinished.length){
+      list.innerHTML = validFinished.sort((a,b)=>a.day-b.day).map(f=>`
+        <div class="finished-row" onclick="openBookDetail(${f.idx})" style="cursor:pointer;">
+          <div ${coverAttrs({cv:f.cv, coverUrl:f.coverUrl, t:f.t})} style="width:38px;height:56px;">${coverPhotoTag({cv:f.cv, coverUrl:f.coverUrl, t:f.t})}</div>
+          <div><div class="f-title">${escapeHtml(f.t)}</div><div class="f-date">${escapeHtml(f.a)} · terminé le ${f.day} ${label.split(' ')[0].toLowerCase()}</div></div>
+        </div>`).join('');
+    } else {
+      // Mois sans lecture terminée : on propose plutôt de piocher dans la PAL, au lieu d'un simple message vide.
+      const palBooks = books.map((b,i)=>({...b, idx:i})).filter(b=>b.s==='pal').slice(0, 3);
+      if(palBooks.length){
+        list.innerHTML = `
+          ${emptyState('<path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="8.5"/>', 'Un mois tranquille', "Aucun livre lu ce mois-ci — et si tu piochais dans ta PAL ?")}
+          <div class="eyebrow" style="margin-top:18px;">Suggestions depuis ta PAL</div>
+          ${palBooks.map(b=>`
+            <div class="finished-row" onclick="openBookDetail(${b.idx})" style="cursor:pointer;">
+              <div ${coverAttrs(b)} style="width:38px;height:56px;">${coverPhotoTag(b)}</div>
+              <div><div class="f-title">${escapeHtml(b.t)}</div><div class="f-date">${escapeHtml(b.a)}</div></div>
+            </div>`).join('')}`;
+      } else {
+        list.innerHTML = emptyState('<path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="8.5"/>', 'Un mois tranquille', "Aucun livre lu ce mois-ci");
+      }
+    }
   }
   function shiftMonth(dir){
     calMonthNum += dir;
@@ -5125,19 +5143,7 @@
   function showApp(){
     document.getElementById('authGate').classList.remove('show');
     document.getElementById('authLoadingScreen').style.display = 'none';
-    if(new URLSearchParams(window.location.search).get('calprint')==='1'){
-      document.body.classList.add('calendar-print-mode');
-      goTo('calendar');
-      return;
-    }
     goTo(state.currentScreen); // reste sur l'écran quitté avant un rechargement, ou après une reconnexion
-  }
-  /** Ouvre le calendrier seul (sans le reste de l'app) dans un nouvel onglet, pratique pour une capture d'écran. */
-  function openCalendarPrintTab(){
-    const url = new URL(window.location.href);
-    url.search = 'calprint=1';
-    url.hash = '';
-    window.open(url.toString(), '_blank');
   }
   /** Reprend le prénom/email du compte Supabase tant que la personne n'a pas déjà personnalisé son profil dans l'app. */
   /** Vide toutes les données de démonstration — appelé une seule fois, la première fois qu'un compte utilise cet appareil. */
