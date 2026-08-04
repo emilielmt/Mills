@@ -48,7 +48,7 @@
   .phone[data-fam="rose"][data-mode="dark"]{ --bg:#291C1E; --bg-deep:#1E1516; --card:#39282B; --card-alt:#463235; --ink:#F3ECED; --ink-soft:#C8A8AD; --ink-faint:#6B4A4F; --accent:#E5BEC4; --accent-deep:#F2E3E6; --accent-pale:#4A3337; --accent2:#CC9CA3; --accent2-deep:#EADADC; --line:#50373B; --shadow:0 14px 34px rgba(0,0,0,0.32); --btn-color:#DCA3AC; --btn-color-deep:#C25768; }
 
   /* Bleu brume */
-  .phone[data-fam="bleu"][data-mode="light"]{ --bg:#E4EBF3; --bg-deep:#D0DEED; --card:#FFFDF8; --card-alt:#D4E1EE; --ink:#332F28; --ink-soft:#394856; --ink-faint:#ACB8C3; --accent:#93AFC9; --accent-deep:#507DA6; --accent-pale:#CCD9E6; --accent2:#4C7096; --accent2-deep:#2F4861; --line:#CBDCEB; --shadow:0 14px 34px rgba(47,72,97,0.065); --btn-color:#93AFC9; --btn-color-deep:#507DA6; }
+  .phone[data-fam="bleu"][data-mode="light"]{ --bg:#F7FAFD; --bg-deep:#E7EFF6; --card:#FFFFFF; --card-alt:#EEF3F9; --ink:#332F28; --ink-soft:#394856; --ink-faint:#ACB8C3; --accent:#93AFC9; --accent-deep:#507DA6; --accent-pale:#E3EBF3; --accent2:#4C7096; --accent2-deep:#2F4861; --line:#E5EDF4; --shadow:0 14px 34px rgba(47,72,97,0.065); --btn-color:#93AFC9; --btn-color-deep:#507DA6; }
   .phone[data-fam="bleu"][data-mode="dark"]{ --bg:#1E2327; --bg-deep:#161A1D; --card:#2A3137; --card-alt:#343C44; --ink:#EDF0F2; --ink-soft:#ACB8C3; --ink-faint:#4E5B67; --accent:#C3D2E0; --accent-deep:#E5EBF0; --accent-pale:#363F47; --accent2:#7C99B8; --accent2-deep:#BAC7D6; --line:#3B444D; --shadow:0 14px 34px rgba(0,0,0,0.32); --btn-color:#93AFC9; --btn-color-deep:#507DA6; }
 
   /* Menthe douce */
@@ -361,6 +361,13 @@
   .save-mini{ background:var(--accent-deep); color:#fff; border:none; border-radius:16px; padding:7px 14px; font-size:12.5px; font-weight:600; cursor:pointer; font-family:'Inter'; }
 
   .bottomnav{ position:absolute; left:14px; right:14px; bottom:16px; background:var(--card); border-radius:var(--radius-pill); box-shadow:0 14px 32px rgba(50,40,25,0.14); display:flex; align-items:center; justify-content:space-between; padding:10px 14px; z-index:20; }
+  /* Mode "calendrier seul" : ouvert dans un nouvel onglet pour capture d'écran, sans le reste de l'app. */
+  body.calendar-print-mode .statusbar,
+  body.calendar-print-mode .bottomnav,
+  body.calendar-print-mode .page-hero-header,
+  body.calendar-print-mode .screen:not(#screen-calendar){ display:none !important; }
+  body.calendar-print-mode .screens{ padding-top:0; }
+  body.calendar-print-mode #screen-calendar{ padding-top:24px; }
   .nav-btn{ background:none; border:none; flex:1; display:flex; align-items:center; justify-content:center; color:var(--ink-faint); cursor:pointer; padding:2px; transition:color .2s ease; }
   .nav-icon-wrap{ width:42px; height:42px; border-radius:var(--radius-pill); display:flex; align-items:center; justify-content:center; transition:background .25s cubic-bezier(.22,.61,.36,1); }
   .nav-icon-wrap .icon{ width:22px; height:22px; }
@@ -743,6 +750,8 @@
     color:var(--accent-deep); background:var(--accent-pale); border-radius:var(--radius-pill); padding:5px 14px; margin-bottom:10px;
   }
   .book-detail-progress{ margin-top:16px; }
+  .fin-date-row{ display:flex; align-items:center; justify-content:center; gap:5px; cursor:pointer; }
+  .fin-date-row .icon-sm{ width:13px; height:13px; color:var(--ink-faint); }
   .bdp-row{ margin-bottom:8px; }
 
   .journal-entries{ max-height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; }
@@ -948,7 +957,7 @@
 </head>
 <body>
 <div class="stage">
-  <div class="phone" data-fam="sauge" data-mode="light" id="phone">
+  <div class="phone" data-fam="bleu" data-mode="light" id="phone">
 
     <div class="statusbar">
       <span>9:41</span>
@@ -1247,8 +1256,15 @@
       <section class="screen" id="screen-calendar">
         <div class="page-hero-header">
           <div class="page-hero-shape page-hero-shape-1"></div>
-          <div class="page-hero-eyebrow">Suivi chronologique</div>
-          <h1 class="page-hero-title">Calendrier</h1>
+          <div class="page-hero-row">
+            <div>
+              <div class="page-hero-eyebrow">Suivi chronologique</div>
+              <h1 class="page-hero-title">Calendrier</h1>
+            </div>
+            <button class="circle-btn page-hero-btn" onclick="openCalendarPrintTab()" title="Ouvrir le calendrier seul dans un nouvel onglet">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/></svg>
+            </button>
+          </div>
           <svg class="page-hero-wave" viewBox="0 0 400 22" preserveAspectRatio="none"><path d="M0 11 Q100 -2 200 9 T400 8 V22 H0 Z" fill="var(--bg)"/></svg>
         </div>
 
@@ -1923,7 +1939,10 @@
         <div class="book-detail-hero">
           <div class="cover book-detail-cover" id="contCover"></div>
           <div class="book-detail-status" id="contStatus">En cours de lecture</div>
-          <div class="subtle" id="contFinDate" style="text-align:center;margin-top:-6px;display:none;"></div>
+          <div class="subtle fin-date-row" id="contFinDate" style="text-align:center;margin-top:-6px;display:none;" onclick="editFinDate()">
+            <span id="contFinDateText"></span>
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg>
+          </div>
           <div class="modal-title" id="contTitle" style="text-align:center;">—</div>
           <div class="subtle" id="contAuthor" style="text-align:center;">—</div>
           <div class="subtle" id="contGenre" style="text-align:center;font-style:italic;font-family:'Playfair Display',serif;margin-bottom:4px;"></div>
@@ -1954,6 +1973,10 @@
             <input type="number" id="contPageCountInput" min="1" oninput="updateContinuePreview()" />
           </div>
         </div>
+        <button class="btn-secondary" id="contMarkFinishedBtn" style="margin-top:10px;width:100%;" onclick="markAsFinishedFromDetail()">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+          Marquer comme terminé
+        </button>
 
         <div class="cont-icon-row">
           <button class="cont-icon-btn" onclick="openJournalModal()" title="Journal de lecture">
@@ -2207,7 +2230,7 @@
 <script>
   /* ================= État global ================= */
   const state = {
-    fam:'sauge', mode:'light', appearanceMode:'full',
+    fam:'bleu', mode:'light', appearanceMode:'full',
     goals:{ monthBooksTarget:4, monthBooksDone:3, monthPagesTarget:600, monthPagesDone:612, yearBooksTarget:40, yearBooksDone:24, yearBooksBase:19 },
     filters:{ status:'tous', genres:[], collection:null, serie:null, favOnly:false, sort:'ajout', view:'grille' },
     selectMode:false, selected:new Set(),
@@ -2288,7 +2311,7 @@
   function persistState(){
     try{
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        books, collections, readingActivity, months, customGoals,
+        books, collections, readingActivity, customGoals,
         fam: state.fam, mode: state.mode, appearanceMode: state.appearanceMode, currentScreen: state.currentScreen,
         profile: state.profile,
         ownerUserId: state.ownerUserId,
@@ -2310,11 +2333,6 @@
       if(Array.isArray(saved.books) && saved.books.length) books.splice(0, books.length, ...saved.books);
       if(Array.isArray(saved.collections)) collections.splice(0, collections.length, ...saved.collections);
       if(Array.isArray(saved.readingActivity) && saved.readingActivity.length) readingActivity.splice(0, readingActivity.length, ...saved.readingActivity);
-      if(Array.isArray(saved.months) && saved.months.length) months.splice(0, months.length, ...saved.months);
-      // monthIndex pointait par défaut sur le 2e mois de démonstration (index 1) : avec les vraies données
-      // d'un compte, le tableau "months" peut être plus court, ce qui faisait planter le calendrier. On le
-      // ramène toujours sur le dernier mois valide (le plus récent) après restauration.
-      monthIndex = Math.max(0, Math.min(monthIndex, months.length - 1));
       if(Array.isArray(saved.customGoals)) customGoals.splice(0, customGoals.length, ...saved.customGoals);
       if(saved.goals) Object.assign(state.goals, saved.goals);
       if(typeof saved.fam === 'string') state.fam = saved.fam;
@@ -2939,11 +2957,13 @@
     if(b.s==='termine' && b.fin){
       const [y,m,d] = b.fin.split('-').map(Number);
       const dateLisible = new Date(y, m-1, d).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
-      finDateEl.textContent = `Terminé le ${dateLisible}`;
+      finDateEl.innerHTML = `<span id="contFinDateText">Terminé le ${dateLisible}</span>
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg>`;
       finDateEl.style.display = '';
     } else {
       finDateEl.style.display = 'none';
     }
+    document.getElementById('contMarkFinishedBtn').style.display = b.s==='termine' ? 'none' : '';
     document.getElementById('contPagesInput').value = b.pagesRead || 0;
     document.getElementById('contPagesInput').max = b.pageCount;
     document.getElementById('contPageCountInput').value = b.pageCount || '';
@@ -2952,6 +2972,52 @@
     openOverlayEl('continueModalOverlay');
   }
   /** Alias explicite : ouvrir la fiche d'un livre depuis le calendrier (même fiche, quel que soit le statut). */
+  /** Édition rapide de la date de fin, directement depuis la fiche, sans passer par "Changer le statut". */
+  function editFinDate(){
+    const idx = state.continueTargetIdx;
+    const b = books[idx];
+    if(!b || b.s!=='termine') return;
+    const wrap = document.getElementById('contFinDate');
+    wrap.innerHTML = `<input type="date" id="contFinDateInput" value="${b.fin||''}" style="font-size:13px;padding:4px 8px;" />`;
+    const input = document.getElementById('contFinDateInput');
+    let handled = false;
+    const commit = () => { if(handled) return; handled = true; saveFinDateEdit(); };
+    input.addEventListener('change', commit);
+    input.addEventListener('blur', commit);
+    input.focus();
+    if(input.showPicker){ try{ input.showPicker(); } catch(e){ /* certains navigateurs refusent showPicker hors interaction directe */ } }
+  }
+  function saveFinDateEdit(){
+    const idx = state.continueTargetIdx;
+    const b = books[idx];
+    const input = document.getElementById('contFinDateInput');
+    if(b && input && input.value){
+      b.fin = input.value;
+      addToCalendar(b, input.value, idx);
+      persistState();
+      recomputeStats();
+      renderHomeInsights();
+    }
+    openContinueModal(idx);
+  }
+  /** Marque directement le livre comme terminé, sans avoir à faire coïncider manuellement pages lues et pages totales. */
+  function markAsFinishedFromDetail(){
+    const idx = state.continueTargetIdx;
+    const b = books[idx];
+    if(!b) return;
+    const pageCount = Math.max(1, Number(document.getElementById('contPageCountInput').value) || b.pageCount || 1);
+    b.pageCount = pageCount;
+    b.pagesRead = pageCount;
+    b.p = 100;
+    b.s = 'termine';
+    if(!b.fin) b.fin = new Date().toISOString().slice(0,10);
+    b.note = b.note || 4;
+    addToCalendar(b, b.fin, idx);
+    persistState();
+    renderLibrary(); renderHomeCurrent(); renderHomeInsights(); recomputeStats();
+    closeOverlay('continueModalOverlay');
+    showCelebration(idx);
+  }
   function openBookDetail(idx){
     if(idx==null || !books[idx]) return;
     openContinueModal(idx);
@@ -4755,25 +4821,58 @@
     const jsDay = new Date(year, month-1, 1).getDay(); // 0=dimanche...6=samedi (natif JS)
     return (jsDay + 6) % 7;
   }
+  /** Confirme visuellement l'ajout au calendrier en ouvrant directement sur le mois concerné. */
   function addToCalendar(book, dateStr, idx){
-    // Retire toute entrée précédente de ce même livre (ex: statut Terminé changé puis re-appliqué
-    // avec une date différente) pour ne jamais le dupliquer dans le calendrier.
-    if(idx!=null){ months.forEach(mo => { mo.finished = mo.finished.filter(f => f.idx!==idx); }); }
-    const [y,m,d] = dateStr.split('-').map(Number);
-    let mi = months.findIndex(mo => mo.year===y && mo.monthNum===m);
-    if(mi===-1){
-      // Le mois n'existe pas encore dans le calendrier (livre terminé à une date hors des mois de démo) : on le crée.
-      months.push({
-        label: `${MONTH_NAMES_FR[m-1]} ${y}`, year:y, monthNum:m,
-        startWeekday: computeStartWeekday(y, m),
-        days: new Date(y, m, 0).getDate(),
-        finished: [],
-      });
-      months.sort((a,b)=> a.year-b.year || a.monthNum-b.monthNum);
-      mi = months.findIndex(mo => mo.year===y && mo.monthNum===m);
+    const [y,m] = dateStr.split('-').map(Number);
+    calYear = y; calMonthNum = m;
+    renderCalendar();
+  }
+
+  /* ================= Calendrier ================= */
+  // Le calendrier n'est plus une liste de mois limitée : n'importe quel mois (même sans lecture terminée)
+  // peut être affiché, en interrogeant directement les vrais livres à la date demandée.
+  const [__ty, __tm] = TODAY.split('-').map(Number);
+  let calYear = __ty, calMonthNum = __tm;
+  function computeFinishedForMonth(year, monthNum){
+    return books
+      .map((b,idx)=>({...b, idx}))
+      .filter(b=>{
+        if(b.s!=='termine' || b.s==='deleted' || !b.fin) return false;
+        const [fy, fm] = b.fin.split('-').map(Number);
+        return fy===year && fm===monthNum;
+      })
+      .map(b=>({ day: Number(b.fin.split('-')[2]), t:b.t, a:b.a, cv:b.cv, coverUrl:b.coverUrl, idx:b.idx }));
+  }
+  function renderCalendar(){
+    const label = `${MONTH_NAMES_FR[calMonthNum-1]} ${calYear}`;
+    const startWeekday = computeStartWeekday(calYear, calMonthNum);
+    const daysInMonth = new Date(calYear, calMonthNum, 0).getDate();
+    const validFinished = computeFinishedForMonth(calYear, calMonthNum);
+    document.getElementById('calMonthLabel').textContent = label;
+    const grid = document.getElementById('calGrid');
+    grid.innerHTML='';
+    for(let i=0;i<startWeekday;i++) grid.innerHTML += '<div class="cal-day empty"></div>';
+    for(let d=1; d<=daysInMonth; d++){
+      const found = validFinished.find(f=>f.day===d);
+      if(found){
+        const bg = found.coverUrl
+          ? `style="background-image:url('${found.coverUrl.replace(/'/g,"%27")}');"`
+          : '';
+        grid.innerHTML += `<div class="cal-day has-book ${found.coverUrl ? '' : (found.cv||'cv-1')}" ${bg} title="${escapeHtml(found.t)}" onclick="openBookDetail(${found.idx})"><span class="daynum">${d}</span></div>`;
+      }
+      else grid.innerHTML += `<div class="cal-day"><span class="daynum">${d}</span></div>`;
     }
-    months[mi].finished.push({day:d, t:book.t, a:book.a, cv:book.cv, coverUrl:book.coverUrl, idx});
-    monthIndex = mi; // ouvre directement sur le mois concerné pour confirmer visuellement l'ajout
+    const list = document.getElementById('finishedList');
+    list.innerHTML = (validFinished.length ? validFinished : []).sort((a,b)=>a.day-b.day).map(f=>`
+      <div class="finished-row" onclick="openBookDetail(${f.idx})" style="cursor:pointer;">
+        <div ${coverAttrs({cv:f.cv, coverUrl:f.coverUrl, t:f.t})} style="width:38px;height:56px;">${coverPhotoTag({cv:f.cv, coverUrl:f.coverUrl, t:f.t})}</div>
+        <div><div class="f-title">${escapeHtml(f.t)}</div><div class="f-date">${escapeHtml(f.a)} · terminé le ${f.day} ${label.split(' ')[0].toLowerCase()}</div></div>
+      </div>`).join('') || emptyState('<path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="8.5"/>', 'Un mois tranquille', "Aucun livre terminé sur cette période — ce n'est que partie remise.");
+  }
+  function shiftMonth(dir){
+    calMonthNum += dir;
+    while(calMonthNum > 12){ calMonthNum -= 12; calYear += 1; }
+    while(calMonthNum < 1){ calMonthNum += 12; calYear -= 1; }
     renderCalendar();
   }
 
@@ -4869,45 +4968,6 @@
     if(!d || !caption) return;
     caption.textContent = `${MONTH_NAMES_FULL_FR[d.m-1]} ${d.y} — ${d.count} livre${d.count>1?'s':''} terminé${d.count>1?'s':''}`;
   }
-
-  /* ================= Calendrier ================= */
-  const months = [
-    { label:"Juin 2026", year:2026, monthNum:6, startWeekday:0, days:30, finished:[] },
-    { label:"Juillet 2026", year:2026, monthNum:7, startWeekday:2, days:31, finished:[] },
-    { label:"Août 2026", year:2026, monthNum:8, startWeekday:5, days:31, finished:[] },
-  ];
-  let monthIndex = 1;
-  function renderCalendar(){
-    // Filet de sécurité : si monthIndex pointe hors du tableau (données restaurées plus courtes que prévu),
-    // on se recale sur le dernier mois valide plutôt que de planter tout l'affichage de l'accueil.
-    if(!months[monthIndex]) monthIndex = Math.max(0, months.length - 1);
-    if(!months[monthIndex]) return; // aucun mois disponible du tout : rien à afficher, mais on ne plante pas
-    const m = months[monthIndex];
-    // Filtrage défensif : un livre supprimé (depuis la bibliothèque, la fiche, ou le calendrier
-    // lui-même) ne doit plus jamais apparaître ici, quel que soit l'endroit d'où vient la suppression.
-    const validFinished = m.finished.filter(f => f.idx==null || (books[f.idx] && books[f.idx].s!=='deleted'));
-    document.getElementById('calMonthLabel').textContent = m.label;
-    const grid = document.getElementById('calGrid');
-    grid.innerHTML='';
-    for(let i=0;i<m.startWeekday;i++) grid.innerHTML += '<div class="cal-day empty"></div>';
-    for(let d=1; d<=m.days; d++){
-      const found = validFinished.find(f=>f.day===d);
-      if(found){
-        const bg = found.coverUrl
-          ? `style="background-image:url('${found.coverUrl.replace(/'/g,"%27")}');"`
-          : '';
-        grid.innerHTML += `<div class="cal-day has-book ${found.coverUrl ? '' : (found.cv||'cv-1')}" ${bg} title="${escapeHtml(found.t)}" onclick="openBookDetail(${found.idx})"><span class="daynum">${d}</span></div>`;
-      }
-      else grid.innerHTML += `<div class="cal-day"><span class="daynum">${d}</span></div>`;
-    }
-    const list = document.getElementById('finishedList');
-    list.innerHTML = (validFinished.length ? validFinished : []).sort((a,b)=>a.day-b.day).map(f=>`
-      <div class="finished-row" onclick="openBookDetail(${f.idx})" style="cursor:pointer;">
-        <div ${coverAttrs({cv:f.cv, coverUrl:f.coverUrl, t:f.t})} style="width:38px;height:56px;">${coverPhotoTag({cv:f.cv, coverUrl:f.coverUrl, t:f.t})}</div>
-        <div><div class="f-title">${escapeHtml(f.t)}</div><div class="f-date">${escapeHtml(f.a)} · terminé le ${f.day} ${m.label.split(' ')[0].toLowerCase()}</div></div>
-      </div>`).join('') || emptyState('<path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="8.5"/>', 'Un mois tranquille', "Aucun livre terminé sur cette période — ce n'est que partie remise.");
-  }
-  function shiftMonth(dir){ monthIndex = (monthIndex + dir + months.length) % months.length; renderCalendar(); }
 
   /* ================= Dashboard tabs ================= */
   document.querySelectorAll('.dash-tab').forEach(tab=>{
@@ -5065,7 +5125,19 @@
   function showApp(){
     document.getElementById('authGate').classList.remove('show');
     document.getElementById('authLoadingScreen').style.display = 'none';
+    if(new URLSearchParams(window.location.search).get('calprint')==='1'){
+      document.body.classList.add('calendar-print-mode');
+      goTo('calendar');
+      return;
+    }
     goTo(state.currentScreen); // reste sur l'écran quitté avant un rechargement, ou après une reconnexion
+  }
+  /** Ouvre le calendrier seul (sans le reste de l'app) dans un nouvel onglet, pratique pour une capture d'écran. */
+  function openCalendarPrintTab(){
+    const url = new URL(window.location.href);
+    url.search = 'calprint=1';
+    url.hash = '';
+    window.open(url.toString(), '_blank');
   }
   /** Reprend le prénom/email du compte Supabase tant que la personne n'a pas déjà personnalisé son profil dans l'app. */
   /** Vide toutes les données de démonstration — appelé une seule fois, la première fois qu'un compte utilise cet appareil. */
@@ -5078,11 +5150,10 @@
     state.goals.yearBooksDone = 0;
     state.goals.monthPagesDone = 0;
     state.goals.yearBooksBase = 0;
-    // Le calendrier a toujours besoin d'au moins un mois valide (le mois courant) pour pouvoir s'afficher.
+    // Le calendrier se recalcule désormais entièrement à partir des vrais livres : on le remet
+    // simplement sur le mois courant, plus besoin de reconstruire un tableau de mois.
     const [ty, tm] = TODAY.split('-').map(Number);
-    months.length = 0;
-    months.push({ label:`${MONTH_NAMES_FR[tm-1]} ${ty}`, year:ty, monthNum:tm, startWeekday:computeStartWeekday(ty, tm), days:new Date(ty, tm, 0).getDate(), finished:[] });
-    monthIndex = 0;
+    calYear = ty; calMonthNum = tm;
   }
   function applySupabaseUserToProfile(user){
     if(!user) return;
