@@ -3748,6 +3748,17 @@
       return scannerFallback("Le lecteur de code s'est chargé de façon incomplète. Recharge la page, ou saisis l'ISBN manuellement.");
     }
 
+    // Vérification explicite de l'état de la permission, quand le navigateur le permet — donne un diagnostic
+    // clair si le blocage vient bien de la permission elle-même, plutôt que de deviner via l'échec du scanner.
+    if(navigator.permissions && navigator.permissions.query){
+      try{
+        const status = await navigator.permissions.query({ name:'camera' });
+        if(status.state === 'denied'){
+          return scannerFallback("La caméra est bloquée pour ce site au niveau du navigateur (permission refusée). Autorise-la dans les réglages de Chrome pour ce site, puis recharge la page.");
+        }
+      } catch(permErr){ /* certains navigateurs ne supportent pas la requête "camera" : on continue normalement */ }
+    }
+
     try{
       qrScanner = new Html5Qrcode('scannerVideoContainer', {
         formatsToSupport: [
@@ -3782,7 +3793,22 @@
       setScannerStatus('Place le code-barres ou le QR code du livre dans le cadre, ou saisis son ISBN ci-dessous.');
     } catch(err){
       console.warn('Scanner indisponible :', err);
-      const detail = err && (err.name || err.message) ? ` (${err.name || ''}${err.name && err.message ? ' — ' : ''}${err.message || ''})` : '';
+      let detail = '';
+      if(err){
+        const parts = [];
+        if(err.name) parts.push(err.name);
+        if(err.message) parts.push(err.message);
+        if(!parts.length){
+          // Certaines erreurs (notamment internes à la librairie de scan) n'ont ni "name" ni "message" standard :
+          // on tente de récupérer un texte exploitable par d'autres moyens plutôt que de rester avec un message vide.
+          try{
+            const s = String(err);
+            if(s && s!=='[object Object]' && s!=='undefined') parts.push(s);
+            else if(err.constructor && err.constructor.name) parts.push(err.constructor.name);
+          } catch(e2){ /* rien de plus à tenter */ }
+        }
+        if(parts.length) detail = ` (${parts.join(' — ')})`;
+      }
       return scannerFallback(`Accès à la caméra refusé ou indisponible${detail}. Autorise la caméra dans les réglages, ou saisis le code manuellement.`);
     }
   }
