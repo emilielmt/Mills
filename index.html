@@ -3730,6 +3730,10 @@
   }
 
   async function openScannerModal(){
+    // Si une instance précédente du scanner existe encore (fenêtre rouverte rapidement, par exemple),
+    // on la nettoie d'abord — démarrer une nouvelle instance pendant qu'une autre est encore active
+    // peut provoquer la même erreur interne de la librairie qu'un double démarrage.
+    await stopScannerStream();
     openOverlayEl('scannerModalOverlay');
     document.getElementById('scannerManualField').style.display = '';
     document.getElementById('scannerManualBtn').style.display = '';
@@ -3769,27 +3773,17 @@
         ],
         verbose:false,
       });
-      try{
-        await qrScanner.start(
-          {
-            facingMode: 'environment',
-            // Demande une mise au point continue (autofocus) plutôt qu'une image figée sur certains téléphones.
-            advanced: [{ focusMode: 'continuous' }],
-          },
-          { fps:10, qrbox:{ width:250, height:160 }, aspectRatio: 1.7777 },
-          onScanDecoded,
-          () => {}
-        );
-      } catch(constraintErr){
-        // Certains appareils/navigateurs rejettent la contrainte de mise au point : on retente sans elle.
-        console.warn('Contrainte de mise au point non supportée, nouvelle tentative sans elle :', constraintErr);
-        await qrScanner.start(
-          { facingMode: 'environment' },
-          { fps:10, qrbox:{ width:250, height:160 } },
-          onScanDecoded,
-          () => {}
-        );
-      }
+      // Démarrage direct avec des réglages compatibles partout : la contrainte de mise au point continue
+      // ("advanced: focusMode") faisait échouer le premier essai sur de nombreux téléphones, et relancer
+      // start() une deuxième fois sur la même instance juste après provoquait une erreur interne de la
+      // librairie ("Cannot transition to a new state, already under transition"). La plupart des caméras
+      // de smartphone font de toute façon la mise au point automatiquement, même sans cette contrainte.
+      await qrScanner.start(
+        { facingMode: 'environment' },
+        { fps:10, qrbox:{ width:250, height:160 }, aspectRatio: 1.7777 },
+        onScanDecoded,
+        () => {}
+      );
       setScannerStatus('Place le code-barres ou le QR code du livre dans le cadre, ou saisis son ISBN ci-dessous.');
     } catch(err){
       console.warn('Scanner indisponible :', err);
