@@ -3777,24 +3777,29 @@
         ],
         verbose:false,
       });
-      // Démarrage direct avec des réglages compatibles partout : la contrainte de mise au point continue
       // Zone de scan large et basse : un code-barres de livre (EAN-13) est bien plus large que haut,
       // contrairement à un QR code. Une zone carrée le laissait souvent déborder ou mal cadré.
-      // La mise au point continue ("advanced: focusMode") est remise ici : le vrai problème n'était pas
-      // cette contrainte en elle-même, mais le fait de relancer start() une 2e fois sur la même instance
-      // juste après un échec (ce qui provoquait "Cannot transition to a new state"). Comme il n'y a plus
-      // qu'un seul appel à start() désormais, cette contrainte peut être demandée sans risque : les
-      // navigateurs qui ne la supportent pas l'ignorent simplement, plutôt que de faire échouer l'appel.
+      // Important : ce premier paramètre de start() n'accepte QU'UNE SEULE clé (la librairie de scan le
+      // vérifie et rejette l'appel sinon, avec l'erreur "should have exactly 1 key, found 2 keys").
+      // On ne peut donc pas y ajouter la contrainte de mise au point ("advanced: focusMode") comme
+      // tenté précédemment — ça faisait échouer systématiquement le démarrage de la caméra.
       await qrScanner.start(
-        {
-          facingMode: 'environment',
-          advanced: [{ focusMode: 'continuous' }],
-        },
+        { facingMode: 'environment' },
         { fps:12, qrbox:{ width:280, height:130 } },
         onScanDecoded,
         () => {}
       );
       setScannerStatus('Place le code-barres ou le QR code du livre dans le cadre, ou saisis son ISBN ci-dessous.');
+      // Tentative d'amélioration de la mise au point, APRÈS le démarrage — directement sur le flux vidéo,
+      // en dehors du paramètre limité de start() qui n'accepte qu'une seule clé. Best-effort : si le
+      // navigateur ou l'appareil ne supporte pas cette contrainte, on l'ignore simplement sans planter.
+      try{
+        const videoEl = document.querySelector('#scannerVideoContainer video');
+        const track = videoEl && videoEl.srcObject && videoEl.srcObject.getVideoTracks()[0];
+        if(track && track.getCapabilities && track.getCapabilities().focusMode && track.getCapabilities().focusMode.includes('continuous')){
+          await track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] });
+        }
+      } catch(focusErr){ console.warn('Mise au point continue non appliquée :', focusErr); }
     } catch(err){
       console.warn('Scanner indisponible :', err);
       let detail = '';
