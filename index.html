@@ -292,7 +292,7 @@
   .stat-label{ font-size:10.5px; color:var(--ink-soft); margin-top:5px; }
 
   /* Objectifs : carte unique, aérée, avec icône par objectif */
-  .goals-unified-card{ background:var(--accent-pale); border-radius:var(--radius-lg); padding:22px 18px; }
+  .goals-unified-card{ background:var(--card); box-shadow:var(--shadow); border-radius:var(--radius-lg); padding:22px 18px; }
   .add-goal-btn{
     width:26px; height:26px; border-radius:50%; background:var(--accent-deep); border:none;
     display:flex; align-items:center; justify-content:center; flex:0 0 auto; cursor:pointer;
@@ -301,17 +301,16 @@
   .goals-rings-row{ display:flex; justify-content:space-between; gap:8px; }
   .goal-ring-item{
     background:none; border:none; flex:1; display:flex; flex-direction:column; align-items:center; text-align:center;
-    cursor:pointer; font-family:'Inter'; padding:2px; transition:transform .22s cubic-bezier(.22,.61,.36,1);
+    font-family:'Inter'; padding:2px;
   }
-  .goal-ring-item:active{ transform:scale(.95); }
   .goal-ring{
     width:64px; height:64px; border-radius:50%; margin-bottom:10px;
     background:conic-gradient(var(--accent-deep) calc(var(--pct)*1%), var(--accent-pale) 0);
     display:flex; align-items:center; justify-content:center;
     transition:background .5s cubic-bezier(.22,.61,.36,1);
   }
-  .goal-ring-inner{ width:50px; height:50px; border-radius:50%; background:var(--accent-pale); display:flex; align-items:center; justify-content:center; }
-  .goal-ring-pct{ font-family:'Playfair Display'; font-weight:700; font-size:13px; color:var(--ink); }
+  .goal-ring-inner{ width:50px; height:50px; border-radius:50%; background:var(--card); display:flex; align-items:center; justify-content:center; }
+  .goal-ring-pct{ font-family:'Playfair Display'; font-weight:700; font-size:13px; color:var(--accent-deep); }
   .goal-ring-label{ font-size:12px; font-weight:600; color:var(--ink); transition:color .2s ease; }
   .goal-ring-item.active .goal-ring-label{ color:var(--accent-deep); }
   .goal-ring-value{ font-size:11.5px; color:var(--ink-soft); margin-top:2px; }
@@ -1109,28 +1108,25 @@
             <div class="eyebrow" style="margin:0;">Mes objectifs</div>
             <button class="link-btn" onclick="goTo('account')">Voir tout</button>
           </div>
-          </div>
 
           <div class="goals-unified-card">
             <div class="goals-rings-row">
-              <button class="goal-ring-item" data-key="monthBooks" onclick="toggleGoalDetail('monthBooks')">
+              <div class="goal-ring-item">
                 <div class="goal-ring" id="ringMonthBooks" style="--pct:75;"><div class="goal-ring-inner"><span class="goal-ring-pct" id="ringMonthBooksPct">75%</span></div></div>
                 <div class="goal-ring-label">Livres du mois</div>
                 <div class="goal-ring-value" id="homeMonthBooksVal">3 / 4</div>
-              </button>
-              <button class="goal-ring-item" data-key="yearBooks" onclick="toggleGoalDetail('yearBooks')">
+              </div>
+              <div class="goal-ring-item">
                 <div class="goal-ring" id="ringYearBooks" style="--pct:60;"><div class="goal-ring-inner"><span class="goal-ring-pct" id="ringYearBooksPct">60%</span></div></div>
                 <div class="goal-ring-label">Livres de l'année</div>
                 <div class="goal-ring-value" id="homeYearBooksVal">24 / 40</div>
-              </button>
-              <button class="goal-ring-item" data-key="monthPages" onclick="toggleGoalDetail('monthPages')">
+              </div>
+              <div class="goal-ring-item">
                 <div class="goal-ring" id="ringMonthPages" style="--pct:100;"><div class="goal-ring-inner"><span class="goal-ring-pct" id="ringMonthPagesPct">100%</span></div></div>
                 <div class="goal-ring-label">Pages du mois</div>
                 <div class="goal-ring-value" id="homeMonthPagesVal">612 / 600</div>
-              </button>
+              </div>
             </div>
-
-            <div class="goal-detail" id="goalDetailPanel"></div>
 
             <div class="goals-card-divider" id="goalsCardDivider" style="display:none;"></div>
 
@@ -2549,6 +2545,7 @@
   }
   function renderGoalDetail(){
     const panel = document.getElementById('goalDetailPanel');
+    if(!panel) return; // le panneau d'édition n'existe plus sur l'accueil : modification déplacée dans Compte
     const key = state.goalDetailKey;
     document.querySelectorAll('.goal-ring-item').forEach(el=>el.classList.toggle('active', el.dataset.key===key));
 
